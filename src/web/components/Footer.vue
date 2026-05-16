@@ -3,13 +3,12 @@ import { ref, onMounted } from "vue";
 import { importServer, VattsImage } from "vatts/vue";
 
 // RPC Setup mantido como solicitado
-const api = importServer<typeof import("../../backend/helper")>("../../backend/helper");
-const { PackageVersion } = api;
+import {dependencies} from "@/../package.json"
 
 const version = ref("1.0.0");
 
 onMounted(async () => {
-  const v = await PackageVersion();
+  const v = dependencies.vatts
   if (v !== null) {
     version.value = v;
   }
