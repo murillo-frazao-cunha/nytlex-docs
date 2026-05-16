@@ -6,7 +6,7 @@
     "start": "vatts start",
     "dev": "vatts dev",
     "export": "vatts export",
-    "build": "vatts build"
+    "build": "vatts export"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.2.0",
