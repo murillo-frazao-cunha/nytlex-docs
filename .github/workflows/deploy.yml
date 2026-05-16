@@ -30,12 +30,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-  
+
       - name: Instalar dependências
         run: npm install
 
       - name: Build do projeto
         run: npm run build
+
+      - name: Descompactar arquivos .gz em .vatts
+        run: |
+          if [ -d "exported/.vatts" ]; then
+            echo "Pasta .vatts encontrada. Descompactando arquivos .gz..."
+            find exported/.vatts -name "*.gz" -exec gunzip -f {} +
+          else
+            echo "Pasta .vatts não encontrada, pulando descompactação."
+          fi
 
       - name: Copiar index para 404 (SPA Fallback)
         run: cp exported/index.html exported/404.html
