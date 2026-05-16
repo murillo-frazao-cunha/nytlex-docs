@@ -10,9 +10,11 @@ Frontend routes are created automatically from the file structure in `/src/web`.
 
 ### File and Folder Mapping
 
-- `/src/web/page.tsx` -> `/`
-- `/src/web/about/page.tsx` -> `/about`
-- `/src/web/blog/[id]/page.tsx` -> `/blog/:id`
+- `/src/web/page.tsx` → `/`
+- `/src/web/about/page.tsx` → `/about`
+- `/src/web/blog/[id]/page.tsx` → `/blog/:id`
+
+---
 
 ### Dynamic Segments
 
@@ -25,31 +27,41 @@ Vatts.js supports the following dynamic segment formats in folder names:
 | `[...param]`    | `/a`, `/a/b`, `/a/b/c` | `/`            |
 | `[[...param]]`  | `/`, `/a`, `/a/b/c`    | N/A            |
 
-#### Examples
+---
 
-1. **Required Parameter** (`[param]`):
+### Examples
 
-```
-/src/web/blog/[id]/page.tsx -> /blog/:id
-```
-
-2. **Optional Parameter** (`[[param]]`):
+#### Required Parameter `[param]`
 
 ```
-/src/web/[[lang]]/about/page.tsx -> /:lang?/about
-```
+/src/web/blog/[id]/page.tsx → /blog/:id
+``` id="r8q2lz"
 
-3. **Catch-all Routes** (`[...param]`):
+---
 
-```
-/src/web/docs/[...slug]/page.tsx -> /docs/*
-```
-
-4. **Optional Catch-all Routes** (`[[...param]]`):
+#### Optional Parameter `[[param]]`
 
 ```
-/src/web/[[...path]]/page.tsx -> /* (also matches /)
+/src/web/[[lang]]/about/page.tsx → /:lang?/about
+``` id="b4k1xa"
+
+---
+
+#### Catch-all Routes `[...param]`
+
 ```
+/src/web/docs/[...slug]/page.tsx → /docs/*
+``` id="nq0p7v"
+
+---
+
+#### Optional Catch-all `[[...param]]`
+
+```
+/src/web/[[...path]]/page.tsx → /* (also matches /)
+``` id="x1m9cd"
+
+---
 
 ### Example Page
 
@@ -61,12 +73,14 @@ export default function App({ params }: { params: { id: string } }) {
     return (
         <main>
             <h1>Blog Post {params.id}</h1>
-            <p>This is a dynamic route with param: {params.id}</p>
+            <p>This is a dynamic route: {params.id}</p>
         </main>
     );
 }
 
-export function generateMetadata({ params }: { params: { id: string } }): Metadata {
+export function generateMetadata(
+    { params }: { params: { id: string } }
+): Metadata {
     return {
         title: `Blog Post ${params.id} | Vatts.js`,
         description: `Read the blog post with ID ${params.id}`,
@@ -75,9 +89,9 @@ export function generateMetadata({ params }: { params: { id: string } }): Metada
 }
 ```
 
-### Metadata Interface
+---
 
-The `Metadata` interface allows you to define SEO and document metadata:
+### Metadata Interface
 
 ```ts
 export interface Metadata {
@@ -90,22 +104,26 @@ export interface Metadata {
     themeColor?: string;
     canonical?: string;
     robots?: string;
+
     openGraph?: {
         title?: string;
         description?: string;
         type?: string;
         url?: string;
-        image?: string | {
-            url: string;
-            width?: number;
-            height?: number;
-            alt?: string;
-        };
+        image?:
+            | string
+            | {
+                  url: string;
+                  width?: number;
+                  height?: number;
+                  alt?: string;
+              };
         siteName?: string;
         locale?: string;
     };
+
     twitter?: {
-        card?: 'summary' | 'summary_large_image' | 'app' | 'player';
+        card?: "summary" | "summary_large_image" | "app" | "player";
         site?: string;
         creator?: string;
         title?: string;
@@ -113,6 +131,7 @@ export interface Metadata {
         image?: string;
         imageAlt?: string;
     };
+
     language?: string;
     charset?: string;
     appleTouchIcon?: string;
@@ -128,23 +147,30 @@ export interface Metadata {
 
 Backend routes live in `/src/backend/routes`. Each file exports a `BackendRouteConfig`.
 
+---
+
 ### Route Configuration
 
 ```ts
 export interface BackendRouteConfig {
     pattern: string;
+
     GET?: BackendHandler;
     POST?: BackendHandler;
     PUT?: BackendHandler;
     DELETE?: BackendHandler;
+
     WS?: WebSocketHandler;
+
     middleware?: VattsMiddleware[];
 }
 ```
 
+---
+
 ### HTTP Examples
 
-1. **Basic GET Route**:
+#### Basic GET Route
 
 ```ts
 // src/backend/routes/api/version.ts
@@ -152,6 +178,7 @@ import { BackendRouteConfig, VattsResponse } from "vatts";
 
 const route: BackendRouteConfig = {
     pattern: "/api/version",
+
     GET: () => {
         return VattsResponse.json({
             version: "1.0.0",
@@ -163,9 +190,11 @@ const route: BackendRouteConfig = {
 export default route;
 ```
 
-2. **CRUD Endpoints**:
+---
 
-```typescript
+#### CRUD Endpoints
+
+```ts
 // src/backend/routes/api/users.ts
 import { BackendRouteConfig, VattsResponse } from "vatts";
 
@@ -178,9 +207,12 @@ const route: BackendRouteConfig = {
     GET: async (_request, params) => {
         if (params.id) {
             const user = users.get(params.id);
+
             if (!user) return VattsResponse.notFound();
+
             return VattsResponse.json(user);
         }
+
         return VattsResponse.json([...users.values()]);
     },
 
@@ -188,22 +220,29 @@ const route: BackendRouteConfig = {
     POST: async (request) => {
         const user = await request.json();
         const id = Date.now().toString();
+
         users.set(id, { id, ...user });
+
         return VattsResponse.json({ id }, { status: 201 });
     },
 
     // Update user
-    PUT: async (request, params) => {.
+    PUT: async (request, params) => {
         if (!params.id) return VattsResponse.badRequest();
+
         const user = await request.json();
+
         users.set(params.id, { ...user, id: params.id });
+
         return VattsResponse.json({ success: true });
     },
 
     // Delete user
     DELETE: async (_request, params) => {
         if (!params.id) return VattsResponse.badRequest();
+
         users.delete(params.id);
+
         return VattsResponse.json({ success: true });
     }
 };
@@ -211,9 +250,11 @@ const route: BackendRouteConfig = {
 export default route;
 ```
 
+---
+
 ### WebSocket Examples
 
-1. **Basic Chat**:
+#### Basic Chat
 
 ```ts
 // src/backend/routes/ws/chat.ts
@@ -223,10 +264,16 @@ const connections = new Set<WebSocket>();
 
 const route: BackendRouteConfig = {
     pattern: "/ws/chat",
+
     WS: {
         onConnect: (ws) => {
             connections.add(ws);
-            ws.send(JSON.stringify({ type: "welcome" }));
+
+            ws.send(
+                JSON.stringify({
+                    type: "welcome"
+                })
+            );
         },
 
         onMessage: (ws, message) => {
@@ -234,14 +281,14 @@ const route: BackendRouteConfig = {
 
             // Broadcast to all connected clients
             connections.forEach((client) => {
-                if (client !== ws) {
-                    client.send(
-                        JSON.stringify({
-                            type: "message",
-                            text: data.text
-                        })
-                    );
-                }
+                if (client === ws) return;
+
+                client.send(
+                    JSON.stringify({
+                        type: "message",
+                        text: data.text
+                    })
+                );
             });
         },
 
@@ -253,4 +300,3 @@ const route: BackendRouteConfig = {
 
 export default route;
 ```
-

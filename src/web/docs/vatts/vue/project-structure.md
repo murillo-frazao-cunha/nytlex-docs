@@ -1,10 +1,10 @@
-# Project Structure  - Vue
+# Project Structure - Vue
 
 Understanding how Vatts.js organizes your files is essential for building clean, efficient, and scalable applications.
 
 This guide explains the folder structure, special files, and conventions used throughout the framework.
-  
----  
+
+---
 
 ## Overview
 
@@ -28,8 +28,9 @@ my-project/
 │   │       └── Header.vue
 │   ├── backend/
 │   │   └── routes/
-│   │       ├── api.ts
-│   │       └── users.ts
+│   │       ├── auth.ts
+│   │       ├── users.ts
+│   │       └── api.ts
 │   └── vattsweb.ts
 ├── public/
 │   ├── favicon.ico
@@ -37,9 +38,9 @@ my-project/
 ├── vatts.config.ts
 ├── tsconfig.json
 └── package.json
-```  
-  
----  
+```
+
+---
 
 ## Root Directories
 
@@ -56,186 +57,234 @@ Examples:
 - `public/logo.png` → `http://localhost:3000/logo.png`
 - `public/images/hero.jpg` → `http://localhost:3000/images/hero.jpg`
 
----  
+---
 
-## Web Directory
+## Web Directory (Frontend)
 
 The `/src/web` directory contains all frontend-related code.
 
-### Frontend Routing Structure
+### Routing System (File-Based)
 
-Vatts uses file-based routing in `/src/web`, similar to Next.js. The file and folder structure maps directly to URL paths.
+Vatts uses a **file-based routing system** similar to Next.js.
 
-- `/src/web/page.vue` -> `/`
-- `/src/web/about/page.vue` -> `/about`
-- `/src/web/blog/page.vue` -> `/blog`
-- `/src/web/blog/[id]/page.vue` -> `/blog/:id`
+Routes are automatically generated based on file structure:
 
-This approach is simple and keeps routes colocated with your pages.
-  
----  
+- `/src/web/page.vue` → `/`
+- `/src/web/about/page.vue` → `/about`
+- `/src/web/blog/page.vue` → `/blog`
+- `/src/web/blog/[id]/page.vue` → `/blog/:id`
+
+No manual route configuration is required for the frontend. The framework resolves routes automatically from the filesystem.
+
+---
 
 ### `/src/web/layout.vue`
 
 The root layout that wraps every page in your application.
 
-This file is used to define:
+Used for:
 
-- Global metadata such as title and description
-- Shared UI elements like headers and footers
-- Global providers, themes, and contexts
+- Global metadata (title, description, SEO)
+- Shared UI (header, footer, sidebar)
+- Providers, themes, and global contexts
 - Global styles
 
 Key points:
 
-- The layout component receives `children`
-- You can export a `metadata` object for SEO
-- This layout wraps all frontend pages
+- Receives `children`
+- Can export a `metadata` object
+- Wraps all pages automatically
 
----  
+---
 
 ### `/src/web/notFound.vue`
 
-The custom 404 page rendered when a route does not exist.
+Custom 404 page rendered when no route matches.
 
-Shown when:
+Triggered when:
 
-- A user navigates to a URL that does not match any route
-- Example: `/page-that-does-not-exist`
+- User navigates to an invalid URL
+- Example: `/random-page-that-does-not-exist`
 
-You can fully customize this page with your own UI and branding.
-  
----  
+Fully customizable UI.
+
+---
 
 ### `/src/web/globals.css`
 
-Global styles applied to the entire application.
+Global CSS loaded across the entire app.
 
-This file is imported in `layout.vue` and typically includes resets, typography, color variables, and base styles.
-  
----  
+Usually includes:
+
+- resets
+- typography
+- CSS variables
+- base styling
+
+Imported inside `layout.vue`.
+
+---
 
 ## Backend Directory
 
 The `/src/backend` directory contains all server-side logic.
 
+Unlike the frontend, the backend is **not file-based automatic routing**.
+
+Everything is **explicitly configured using `BackendRouteConfig`**.
+
+---
+
 ### `/src/backend/routes`
 
-This directory contains your backend route modules (API endpoints).
+This directory contains backend route modules.
 
-Vatts.js uses this folder as a **conventional place to organize backend routes**, including nested paths and grouped domains (e.g. `auth`, `users`, `admin`).  
-However, backend routing is driven by **explicit route definitions**, not by automatically mapping files to URLs.
+Even though files are grouped by domain (auth, users, api, etc.), **routing is still manually defined**.
 
-Each route module defines one or more routes by exporting a **`BackendRouteConfig`**, where you describe:
+Each file exports one or more **`BackendRouteConfig`** objects.
 
-* the route path (e.g. `/auth/login`)
-* the supported HTTP or WS methods
-* the handler logic
-* optional metadata (middlewares, auth, validation, etc.)
+Example:
 
-The folder/file structure is only an organizational aid — the actual routing behavior comes from the exported configuration, which the backend router loads and registers at runtime.
+```ts
+export const loginRoute: BackendRouteConfig = {
+  path: "/auth/login",
+  method: "POST",
+  handler: async (req) => {
+    return { ok: true }
+  }
+}
+```
 
-To learn how backend routes are defined, configured, and registered (methods, params, WebSocket support, metadata, etc.), see the **Routing** guide: `/docs/vatts/routing`.
+---
 
-___  
+### Backend Routing Model
+
+Key rules:
+
+- Routes are NOT auto-generated
+- Each route must define a `path`
+- Each route must explicitly define:
+    - HTTP method(s)
+    - handler function
+    - optional metadata (auth, middleware, validation, etc.)
+
+Example paths:
+
+- `/auth/login`
+- `/auth/register`
+- `/users/:id`
+- `/admin/stats`
+
+The file structure is only organizational — the real routing comes from the exported configs.
+
+---
+
+### BackendRouteConfig
+
+The core of backend routing.
+
+Defines a single route:
+
+- `path`: route URL
+- `method`: HTTP or WS method
+- `handler`: execution logic
+- `meta` (optional): middleware, auth rules, validation, etc.
+
+This keeps backend behavior fully explicit and predictable.
+
+---
 
 ## Server-Only Imports
 
 ### `importServer()`
 
-Vatts.js provides the `importServer()` utility to safely import server-only code.
+Utility for safely importing server-only code.
 
-Important rules:
+Rules:
 
-- `importServer()` can only be used inside `/src/backend`
-- It must never be used in `/src/web`
-- Code imported with `importServer()` is guaranteed to never be bundled or executed on the client
+- Only usable inside `/src/backend`
+- Never allowed in `/src/web`
+- Never bundled to the client
 
-This makes it ideal for:
+Use cases:
 
 - Database access
-- Authentication logic
-- Secrets and environment variables
+- Authentication
+- Secrets / environment variables
 - Heavy server-only dependencies
 
-Using `importServer()` ensures a strict separation between frontend and backend and prevents accidental data leaks to the client.
-  
----  
+Ensures strict backend/frontend isolation.
+
+---
 
 ## Instrumentation File
 
 ### `/src/vattsweb.ts`
 
-This special file runs once when your Vatts.js application starts.
+Runs once when the application starts.
 
-Common use cases:
+Used for:
 
-- Initialize database connections
-- Register global middleware
-- Configure logging
-- Set up background jobs
-- Load environment-based configuration
+- database initialization
+- global middleware setup
+- logging configuration
+- background jobs
+- environment boot logic
 
-Key details:
+Rules:
 
 - Must export a default function
-- Can be asynchronous
-- Runs before any routes are loaded
-- Executes in both development and production
+- Can be async
+- Runs before routes are registered
+- Executes in dev and production
 
-This is the ideal place for one-time application setup logic.
-  
----  
+---
 
 ## Configuration Files
 
 ### `vatts.config.ts`
 
-The main configuration file for Vatts.js, located at the project root. You can also use `vatts.config.js`.
+Main framework configuration file.
 
-Used to:
+Used for:
 
-- Configure server behavior
-- Register plugins and middleware
-- Control runtime and build settings
-- Customize development and production behavior
+- server behavior
+- plugins and middleware
+- runtime settings
+- build configuration
 
-Any server-level customization belongs here.
-  
----  
+---
 
 ### `tsconfig.json`
 
-TypeScript configuration file.
+TypeScript configuration.
 
-Required configuration:
+Required:
 
-```json  
-{  
- "compilerOptions": { 
-   "types": ["vatts/global"]
- }
-}  
-```  
+```json
+{
+  "compilerOptions": {
+    "types": ["vatts/global"]
+  }
+}
+```
 
-Including `vatts/global` is required for Vatts.js global types. This file is required when using JavaScript or TypeScript.
-  
----  
+---
 
 ### `package.json`
 
-Defines project dependencies and scripts.
+Project metadata and scripts.
 
-Example scripts:
+Example:
 
-```json  
-{  
- "scripts": { 
-   "dev": "vatts dev", 
-   "start": "vatts start"
- }
-}  
-```  
+```json
+{
+  "scripts": {
+    "dev": "vatts dev",
+    "start": "vatts start"
+  }
+}
+```
 
-* dev starts the development server with hot reload
-* start runs the application in production mode
+- `dev`: development server with hot reload
+- `start`: production server
