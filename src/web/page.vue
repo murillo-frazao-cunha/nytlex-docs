@@ -8,12 +8,12 @@ import {
 } from 'lucide-vue-next';
 
 // Imports do framework Vatts (versão Vue)
-import { importServer, Link, VattsImage } from "vatts/vue";
+import { Link, VattsImage } from "vatts/vue";
 
 // Componentes
 import Footer from "./components/Footer.vue";
 // Server RPC
-import {version as v} from "@/../package.json"
+import {dependencies} from "@/../package.json"
 
 // State
 const version = ref("1.0.0");
@@ -22,6 +22,7 @@ const primaryColor = "#a8a8a8";
 // Lifecycle
 onMounted(async () => {
   try {
+    const v = dependencies.vatts
     if (v !== null) {
       version.value = v;
     }
