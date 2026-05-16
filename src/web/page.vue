@@ -13,8 +13,7 @@ import { importServer, Link, VattsImage } from "vatts/vue";
 // Componentes
 import Footer from "./components/Footer.vue";
 // Server RPC
-const api = importServer<typeof import("../backend/helper")>("../backend/helper");
-const { PackageVersion } = api;
+import {version as v} from "@/../package.json"
 
 // State
 const version = ref("1.0.0");
@@ -23,7 +22,6 @@ const primaryColor = "#a8a8a8";
 // Lifecycle
 onMounted(async () => {
   try {
-    const v = await PackageVersion();
     if (v !== null) {
       version.value = v;
     }
