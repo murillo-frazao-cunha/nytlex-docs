@@ -1,19 +1,7 @@
 <script setup lang="ts">
 import "./style.css"
-import { ref, computed, watch, onMounted, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { marked } from 'marked';
-import Prism from 'prismjs';
-
-// Importar linguagens Prism
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-tsx';
-import 'prismjs/components/prism-css';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-markdown';
-import 'prismjs/components/prism-markup'; // Necessário para HTML/Vue
 
 // Ícones Lucide (Substitutos para react-icons)
 import {
@@ -43,6 +31,9 @@ const primaryColor = "#a8a8a8";
 
 const generateId = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+// Instância modular do Prism controlada para o ciclo de vida do Client-Side
+let prismInstance: any = null;
+
 // Configuração do Renderer
 const renderer = new marked.Renderer();
 
@@ -54,22 +45,24 @@ renderer.heading = ({ text, depth }: any) => {
           </h${depth}>`;
 };
 
-// Faz com que Prism.languages['vue'] deixe de ser undefined (Aliás para markup/html)
-if (Prism.languages.markup) {
-  Prism.languages.vue = Prism.languages.markup;
-}
-
 renderer.code = ({ text, lang }: any) => {
-  // Verificação de segurança para evitar erro se a linguagem não existir
-  // Normaliza 'vue' para 'markup' se necessário, ou usa plaintext
-  let validLanguage = lang;
-  if (!lang || !Prism.languages[lang]) {
+  let validLanguage = lang || 'plaintext';
+
+  if (prismInstance && !prismInstance.languages[validLanguage]) {
     validLanguage = 'plaintext';
   }
 
-  // Prism.highlight é geralmente seguro no Node, mas highlightAll não.
-  // Mantemos isso síncrono para gerar o HTML estático corretamente.
-  const highlighted = Prism.highlight(text, Prism.languages[validLanguage], validLanguage);
+  // Tratamento seguro: Se o SSR rodar ou o Prism ainda não carregou, faz o escape básico de HTML.
+  // No momento em que o Prism carregar no client-side, o watcher força o highlight real.
+  let highlighted = text;
+  if (prismInstance && prismInstance.languages[validLanguage]) {
+    highlighted = prismInstance.highlight(text, prismInstance.languages[validLanguage], validLanguage);
+  } else {
+    highlighted = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+  }
 
   return `
         <div class=" font-jmono code-block my-8 group relative rounded-xl border border-white/5 bg-[#0a0a0c]">
@@ -110,9 +103,7 @@ const iconMap: { [key: string]: any } = {
 
 // --- Component Logic ---
 
-
 // Extração de params da rota
-// Assumindo que vatts/vue mapeia rotas dinâmicas para route.params
 const brand = computed(() => props.params.value || 'vatts');
 const isFrameworkParam = computed(() => props.params.value2 === 'react' || props.params.value2 === 'vue');
 
@@ -125,6 +116,7 @@ const framework = ref<'react' | 'vue'>(initialFramework as 'react' | 'vue');
 const htmlContent = ref('');
 const headings = ref<any[]>([]);
 const isDropdownOpen = ref(false);
+const isPrismReady = ref(false); // Flag reativa para sincronismo pós-carregamento dinâmico
 
 
 // Helpers de Navegação
@@ -148,12 +140,10 @@ const navigateToPage = (itemId: string, newFramework?: string) => {
     newUrl = `/docs/${brand.value}/${targetFramework}/${itemId}`;
   }
 
-  // Update URL without reloading the page
   if (typeof window !== 'undefined') {
     window.history.pushState({}, '', newUrl);
   }
 
-  // Update reactive state to trigger content change
   if (newFramework && newFramework !== framework.value) {
     framework.value = newFramework as 'react' | 'vue';
   }
@@ -162,7 +152,7 @@ const navigateToPage = (itemId: string, newFramework?: string) => {
 
 
 // Watcher principal para carregar e renderizar o conteúdo
-watch([activeSection, framework], async () => {
+watch([activeSection, framework, isPrismReady], async () => {
   const currentItem = sidebarConfig.sections
       .flatMap(s => s.items)
       .find(i => i.id === activeSection.value);
@@ -178,12 +168,10 @@ watch([activeSection, framework], async () => {
     const matches = [...content.matchAll(headingRegex)];
     headings.value = matches.map((m: any) => ({ id: generateId(m[2]), text: m[2], level: m[1].length }));
 
-    // Executar Prism.highlightAll apenas no cliente (browser) para garantir
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && prismInstance) {
       await nextTick();
-      Prism.highlightAll();
+      prismInstance.highlightAll();
 
-      // Smooth scroll to top when content changes
       if(window.scrollTo) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -191,36 +179,57 @@ watch([activeSection, framework], async () => {
   }
 }, { immediate: true });
 
-// Handle browser back/forward buttons
-onMounted(() => {
+let handlePopState: () => void;
+
+// Execução assíncrona focada estritamente no Client
+onMounted(async () => {
   if (typeof window !== 'undefined') {
-    const handlePopState = () => {
+    const PrismModule = await import('prismjs');
+    prismInstance = PrismModule.default || PrismModule;
+
+    // Carrega os plugins de sintaxe dinamicamente no navegador
+    await import('prismjs/components/prism-javascript');
+    await import('prismjs/components/prism-typescript');
+    await import('prismjs/components/prism-jsx');
+    await import('prismjs/components/prism-tsx');
+    await import('prismjs/components/prism-css');
+    await import('prismjs/components/prism-bash');
+    await import('prismjs/components/prism-json');
+    await import('prismjs/components/prism-markdown');
+    await import('prismjs/components/prism-markup');
+
+    if (prismInstance.languages.markup) {
+      prismInstance.languages.vue = prismInstance.languages.markup;
+    }
+
+    // Altera o estado para acionar o realce de sintaxe no watch
+    isPrismReady.value = true;
+
+    handlePopState = () => {
       const pathParts = window.location.pathname.split('/').filter(Boolean);
-      // pathParts: ['docs', 'vatts', 'react|vue?', 'page-id']
 
       if (pathParts.length >= 3) {
         const possibleFramework = pathParts[2];
         const possiblePageId = pathParts[3];
 
-        // Check if third part is a framework
         if (possibleFramework === 'react' || possibleFramework === 'vue') {
           framework.value = possibleFramework;
           if (possiblePageId) {
             activeSection.value = possiblePageId;
           }
         } else {
-          // Third part is the page ID
           activeSection.value = possibleFramework;
         }
       }
     };
 
     window.addEventListener('popstate', handlePopState);
+  }
+});
 
-    // Cleanup
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
+onUnmounted(() => {
+  if (typeof window !== 'undefined' && handlePopState) {
+    window.removeEventListener('popstate', handlePopState);
   }
 });
 
@@ -228,7 +237,7 @@ onMounted(() => {
 
 <template>
   <div class="font-dm relative min-h-screen bg-black text-slate-400 selection:bg-white/10 isolate flex flex-col">
-    
+
 
     <div class="relative z-0 flex flex-1 min-w-0 bg-black">
 
@@ -361,19 +370,17 @@ onMounted(() => {
 </template>
 
 <style>
-/* CSS Extra caso o tema do Prism precise de ajustes finos */
-/* Remove o background padrão do tema para usar o seu bg-transparent do componente */
 pre[class*="language-"] {
   background: transparent !important;
   text-shadow: none !important;
 }
 
-/* Garante que o scroll funcione bem dentro do bloco de código */
 .code-block pre {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 </style>
+
 <script lang="ts">
 import {Metadata} from "vatts/vue";
 
@@ -387,4 +394,3 @@ export function generateMetadata(params: any): Metadata {
   }
 }
 </script>
-

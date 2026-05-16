@@ -192,11 +192,11 @@ export function generateMetadata(): Metadata {
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col">
               <div class="flex items-start gap-5 mb-8 relative z-10">
                 <div class="shrink-0 p-3 bg-yellow-500/20 rounded-xl border border-yellow-500/30 shadow-lg shadow-yellow-500/10">
-                  <VattsImage src="https://rollupjs.org/rollup-logo.svg" width="28px" height="28px" alt="Rollup" />
+                  <VattsImage src="https://esbuild.github.io/favicon.svg" width="28px" height="28px" alt="Esbuild" />
                 </div>
                 <div class="flex-1">
                   <div class="flex justify-between items-center mb-1">
-                    <h3 class="text-xl font-bold text-white">Rollup</h3>
+                    <h3 class="text-xl font-bold text-white">Esbuild</h3>
                   </div>
                   <p class="text-sm text-slate-300">Fast builds and maximum production performance.</p>
                 </div>
@@ -214,7 +214,7 @@ export function generateMetadata(): Metadata {
                     <span class="text-yellow-300">build</span>
                     <span>}</span>
                     <span class="text-purple-400">from</span>
-                    <span class="text-emerald-400">'rollup'</span>
+                    <span class="text-emerald-400">'esbuild'</span>
                   </div>
                   <div class="text-slate-500">// Efficient bundling</div>
                 </div>

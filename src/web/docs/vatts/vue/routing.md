@@ -10,13 +10,15 @@ Frontend routes are created automatically from the file structure in `/src/web`.
 
 ### File and Folder Mapping
 
-- `/src/web/page.vue` -> `/`
-- `/src/web/about/page.vue` -> `/about`
-- `/src/web/blog/[id]/page.vue` -> `/blog/:id`
+- `/src/web/page.vue` → `/`
+- `/src/web/about/page.vue` → `/about`
+- `/src/web/blog/[id]/page.vue` → `/blog/:id`
+
+---
 
 ### Dynamic Segments
 
-Vatts.js supports the following dynamic segment formats in folder names:
+Vatts.js supports the following dynamic segment formats:
 
 | Segment         | Matches                | Does Not Match |
 |-----------------|------------------------|----------------|
@@ -25,110 +27,113 @@ Vatts.js supports the following dynamic segment formats in folder names:
 | `[...param]`    | `/a`, `/a/b`, `/a/b/c` | `/`            |
 | `[[...param]]`  | `/`, `/a`, `/a/b/c`    | N/A            |
 
-#### Examples
+---
 
-1. **Required Parameter** (`[param]`):
+### Examples
 
-```
-/src/web/blog/[id]/page.vue -> /blog/:id
-```
-
-2. **Optional Parameter** (`[[param]]`):
+#### Required Parameter `[param]`
 
 ```
-/src/web/[[lang]]/about/page.vue -> /:lang?/about
+/src/web/blog/[id]/page.vue → /blog/:id
 ```
 
-3. **Catch-all Routes** (`[...param]`):
+---
+
+#### Optional Parameter `[[param]]`
 
 ```
-/src/web/docs/[...slug]/page.vue -> /docs/*
+/src/web/[[lang]]/about/page.vue → /:lang?/about
 ```
 
-4. **Optional Catch-all Routes** (`[[...param]]`):
+---
+
+#### Catch-all Routes `[...param]`
 
 ```
-/src/web/[[...path]]/page.vue -> /* (also matches /)
+/src/web/docs/[...slug]/page.vue → /docs/*
 ```
+
+---
+
+#### Optional Catch-all `[[...param]]`
+
+```
+/src/web/[[...path]]/page.vue → /* (also matches /)
+```
+
+---
 
 ### Example Page
 
 ```vue
 <!-- src/web/blog/[id]/page.vue -->
 <template>
-    <main>
-        <h1>Blog Post {{ props.params.id }}</h1>
-        <p>This is a dynamic route with param: {{ props.params.id }}</p>
-    </main>
+  <main>
+    <h1>Blog Post {{ props.params.id }}</h1>
+    <p>Reading post: {{ props.params.id }}</p>
+  </main>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from "vue";
 
-const props = defineProps({
-    params: {
-        type: Object,
-        default: () => ({})
-    }
-});
-</script>
-<script lang="ts">
-   import { Metadata } from "vatts/vue";
-   
-   export function generateMetadata(): Metadata {
-      return {
-         title: `Blog Post ${props.params.id} | Vatts.js`,
-         description: `Read the blog post with ID ${props.params.id}`,
-         keywords: ["blog", "vatts", props.params.id]
-      };
-   }
+const props = defineProps<{
+  params: {
+    id: string;
+  };
+}>();
 </script>
 ```
 
-### Metadata Interface
+---
 
-The `Metadata` interface allows you to define SEO and document metadata:
+### Metadata Interface
 
 ```ts
 export interface Metadata {
+  title?: string;
+  description?: string;
+  keywords?: string | string[];
+  author?: string;
+  favicon?: string;
+  viewport?: string;
+  themeColor?: string;
+  canonical?: string;
+  robots?: string;
+
+  openGraph?: {
     title?: string;
     description?: string;
-    keywords?: string | string[];
-    author?: string;
-    favicon?: string;
-    viewport?: string;
-    themeColor?: string;
-    canonical?: string;
-    robots?: string;
-    openGraph?: {
-        title?: string;
-        description?: string;
-        type?: string;
-        url?: string;
-        image?: string | {
-            url: string;
-            width?: number;
-            height?: number;
-            alt?: string;
+    type?: string;
+    url?: string;
+    image?:
+      | string
+      | {
+          url: string;
+          width?: number;
+          height?: number;
+          alt?: string;
         };
-        siteName?: string;
-        locale?: string;
-    };
-    twitter?: {
-        card?: 'summary' | 'summary_large_image' | 'app' | 'player';
-        site?: string;
-        creator?: string;
-        title?: string;
-        description?: string;
-        image?: string;
-        imageAlt?: string;
-    };
-    language?: string;
-    charset?: string;
-    appleTouchIcon?: string;
-    manifest?: string;
-    other?: Record<string, string>;
-    scripts?: Record<string, Record<string, string>>;
+    siteName?: string;
+    locale?: string;
+  };
+
+  twitter?: {
+    card?: "summary" | "summary_large_image" | "app" | "player";
+    site?: string;
+    creator?: string;
+    title?: string;
+    description?: string;
+    image?: string;
+    imageAlt?: string;
+  };
+
+  language?: string;
+  charset?: string;
+  appleTouchIcon?: string;
+  manifest?: string;
+  other?: Record<string, string>;
+  scripts?: Record<string, Record<string, string>>;
 }
 ```
 
@@ -136,94 +141,111 @@ export interface Metadata {
 
 ## Backend Routes
 
-Backend routes live in `/src/backend/routes`. Each file exports a `BackendRouteConfig`.
+Backend routes live in `/src/backend/routes`.
+
+Each file exports a **`BackendRouteConfig`**, and routing is fully explicit via `pattern`.
+
+---
 
 ### Route Configuration
 
 ```ts
 export interface BackendRouteConfig {
-    pattern: string;
-    GET?: BackendHandler;
-    POST?: BackendHandler;
-    PUT?: BackendHandler;
-    DELETE?: BackendHandler;
-    WS?: WebSocketHandler;
-    middleware?: VattsMiddleware[];
+  pattern: string;
+
+  GET?: BackendHandler;
+  POST?: BackendHandler;
+  PUT?: BackendHandler;
+  DELETE?: BackendHandler;
+
+  WS?: WebSocketHandler;
+
+  middleware?: VattsMiddleware[];
 }
 ```
 
-### HTTP Examples
+---
 
-1. **Basic GET Route**:
+### HTTP Example (Basic Route)
 
 ```ts
 // src/backend/routes/api/version.ts
 import { BackendRouteConfig, VattsResponse } from "vatts";
 
 const route: BackendRouteConfig = {
-    pattern: "/api/version",
-    GET: () => {
-        return VattsResponse.json({
-            version: "1.0.0",
-            name: "Vatts.js Example"
-        });
-    }
+  pattern: "/api/version",
+
+  GET: () => {
+    return VattsResponse.json({
+      version: "1.0.0",
+      name: "Vatts.js Example"
+    });
+  }
 };
 
 export default route;
 ```
 
-2. **CRUD Endpoints**:
+---
 
-```typescript
+### CRUD Example
+
+```ts
 // src/backend/routes/api/users.ts
 import { BackendRouteConfig, VattsResponse } from "vatts";
 
 const users = new Map<string, { id: string; name: string }>();
 
 const route: BackendRouteConfig = {
-    pattern: "/api/users/[[id]]",
+  pattern: "/api/users/[[id]]",
 
-    // List users or get one user
-    GET: async (_request, params) => {
-        if (params.id) {
-            const user = users.get(params.id);
-            if (!user) return VattsResponse.notFound();
-            return VattsResponse.json(user);
-        }
-        return VattsResponse.json([...users.values()]);
-    },
-
-    // Create user
-    POST: async (request) => {
-        const user = await request.json();
-        const id = Date.now().toString();
-        users.set(id, { id, ...user });
-        return VattsResponse.json({ id }, { status: 201 });
-    },
-
-    // Update user
-    PUT: async (request, params) => {
-        if (!params.id) return VattsResponse.badRequest();
-        const user = await request.json();
-        users.set(params.id, { ...user, id: params.id });
-        return VattsResponse.json({ success: true });
-    },
-
-    // Delete user
-    DELETE: async (_request, params) => {
-        if (!params.id) return VattsResponse.badRequest();
-        users.delete(params.id);
-        return VattsResponse.json({ success: true });
+  // List or single user
+  GET: async (_req, params) => {
+    if (params.id) {
+      const user = users.get(params.id);
+      if (!user) return VattsResponse.notFound();
+      return VattsResponse.json(user);
     }
+
+    return VattsResponse.json([...users.values()]);
+  },
+
+  // Create user
+  POST: async (req) => {
+    const body = await req.json();
+    const id = Date.now().toString();
+
+    users.set(id, { id, ...body });
+
+    return VattsResponse.json({ id }, { status: 201 });
+  },
+
+  // Update user
+  PUT: async (req, params) => {
+    if (!params.id) return VattsResponse.badRequest();
+
+    const body = await req.json();
+    users.set(params.id, { ...body, id: params.id });
+
+    return VattsResponse.json({ success: true });
+  },
+
+  // Delete user
+  DELETE: (_req, params) => {
+    if (!params.id) return VattsResponse.badRequest();
+
+    users.delete(params.id);
+
+    return VattsResponse.json({ success: true });
+  }
 };
 
 export default route;
 ```
 
-### WebSocket Examples
+---
 
-1. **Basic Chat**:
+### WebSocket Example (Chat)
 
 ```ts
 // src/backend/routes/ws/chat.ts
@@ -232,33 +254,38 @@ import { BackendRouteConfig, WebSocket } from "vatts";
 const connections = new Set<WebSocket>();
 
 const route: BackendRouteConfig = {
-    pattern: "/ws/chat",
-    WS: {
-        onConnect: (ws) => {
-            connections.add(ws);
-            ws.send(JSON.stringify({ type: "welcome" }));
-        },
+  pattern: "/ws/chat",
 
-        onMessage: (ws, message) => {
-            const data = JSON.parse(message);
+  WS: {
+    onConnect: (ws) => {
+      connections.add(ws);
 
-            // Broadcast to all connected clients
-            connections.forEach((client) => {
-                if (client !== ws) {
-                    client.send(
-                        JSON.stringify({
-                            type: "message",
-                            text: data.text
-                        })
-                    );
-                }
-            });
-        },
+      ws.send(
+        JSON.stringify({
+          type: "welcome"
+        })
+      );
+    },
 
-        onClose: (ws) => {
-            connections.delete(ws);
-        }
+    onMessage: (ws, message) => {
+      const data = JSON.parse(message);
+
+      for (const client of connections) {
+        if (client === ws) continue;
+
+        client.send(
+          JSON.stringify({
+            type: "message",
+            text: data.text
+          })
+        );
+      }
+    },
+
+    onClose: (ws) => {
+      connections.delete(ws);
     }
+  }
 };
 
 export default route;
