@@ -43,7 +43,7 @@ onMounted(async () => {
         <div class="flex flex-col items-center md:items-end gap-4">
           <div class="flex items-center gap-6">
             <a
-                href="https://github.com/mfrazlab/vatts.js"
+                href="https://github.com/murillo-frazao-cunha/vatts.js"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-slate-400 hover:text-white transition-all transform hover:scale-110"

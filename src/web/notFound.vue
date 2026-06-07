@@ -73,7 +73,7 @@ const reload = () => {
 
         <div class="px-10 py-5 bg-[#0a0a0a] border-t border-[#1f1f1f]">
           <a href="https://npmjs.com/package/vatts" target="_blank" class="flex items-center gap-3 no-underline text-[#888888] text-[13px] transition-colors hover:text-white group">
-            <img src="https://raw.githubusercontent.com/mfrazlab/vatts.js/master/docs/public/logo.png" alt="Vatts Logo" class="w-[18px] h-[18px] opacity-80" />
+            <img src="https://raw.githubusercontent.com/murillo-frazao-cunha/vatts.js/master/docs/public/logo.png" alt="Vatts Logo" class="w-[18px] h-[18px] opacity-80" />
             <span>
               Vatts.js 
             </span>

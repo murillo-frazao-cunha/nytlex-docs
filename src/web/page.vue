@@ -663,7 +663,7 @@ export function generateMetadata(): Metadata {
               Read the Documentation
             </Link>
 
-            <a href="https://github.com/mfrazlab/vatts.js" target="_blank" rel="noreferrer" class="w-full sm:w-auto px-8 py-4 bg-[#111111] border border-white/10 text-white font-bold rounded-xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+            <a href="https://github.com/murillo-frazao-cunha/vatts.js" target="_blank" rel="noreferrer" class="w-full sm:w-auto px-8 py-4 bg-[#111111] border border-white/10 text-white font-bold rounded-xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
               <Github :size="18" />
               Star on GitHub
             </a>

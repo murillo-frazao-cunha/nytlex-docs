@@ -132,7 +132,7 @@ onUnmounted(() => {
         </button>
 
         <a
-            href="https://github.com/mfrazlab/vatts.js"
+            href="https://github.com/murillo-frazao-cunha/vatts.js"
             class="text-slate-400 hover:text-white transition-all p-2.5 hover:bg-white/10 rounded-lg backdrop-blur-sm"
             target="_blank"
             rel="noreferrer"
