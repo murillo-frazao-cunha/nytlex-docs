@@ -253,7 +253,7 @@ onUnmounted(() => {
               </div>
               <div class="text-left">
                 <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-none mb-1">Using Framework</p>
-                <p class="text-sm font-bold text-white leading-none capitalize">{{ currentFrameworkData.label }}</p>
+                <p class="text-sm font-bold text-white leading-none">{{ currentFrameworkData.label }}</p>
               </div>
             </div>
             <ChevronDown :size="12" :class="`text-zinc-500 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`" />
