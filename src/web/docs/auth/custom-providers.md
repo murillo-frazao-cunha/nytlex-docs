@@ -1,13 +1,13 @@
 # Custom Auth Providers
 
-You can create your own authentication providers in Vatts.js to integrate any login system, such as OAuth, SSO, LDAP, or custom credentials-based authentication.
+You can create your own authentication providers in Nytlex.js to integrate any login system, such as OAuth, SSO, LDAP, or custom credentials-based authentication.
 
 ## How it works
 
 A custom provider must implement the `AuthProviderClass` interface, which you can import from:
 
 ```typescript
-import { AuthProviderClass } from "@vatts/auth";
+import { AuthProviderClass } from "@nytlex/auth";
 ```
 
 The main interface is:
@@ -39,7 +39,7 @@ export interface AuthProviderClass {
 ## Example: Credentials Provider
 
 ```typescript
-import { AuthProviderClass } from "@vatts/auth";
+import { AuthProviderClass } from "@nytlex/auth";
 
 export class MyCredentialsProvider implements AuthProviderClass {
   id = "my-credentials";
@@ -77,8 +77,8 @@ OAuth providers require a specific flow to work correctly. Let's build a complet
 Here's a full implementation of a Discord OAuth provider:
 
 ```typescript
-import type { AuthProviderClass, AuthRoute, User } from "@vatts/auth";
-import { VattsRequest, VattsResponse } from "vatts";
+import type { AuthProviderClass, AuthRoute, User } from "@nytlex/auth";
+import { NytlexRequest, NytlexResponse } from "nytlex";
 
 export interface DiscordConfig {
   id?: string;
@@ -198,12 +198,12 @@ export class DiscordProvider implements AuthProviderClass {
     {
       method: "GET",
       path: "/api/auth/callback/discord",
-      handler: async (req: VattsRequest) => {
+      handler: async (req: NytlexRequest) => {
         const url = new URL(req.url || "", "http://localhost");
         const code = url.searchParams.get("code");
 
         if (!code) {
-          return VattsResponse.json(
+          return NytlexResponse.json(
             { error: "Authorization code not provided" },
             { status: 400 }
           );
@@ -223,16 +223,16 @@ export class DiscordProvider implements AuthProviderClass {
           const setCookieHeader = authResponse.headers.get("set-cookie");
           
           if (this.config.successUrl) {
-            return VattsResponse
+            return NytlexResponse
               .redirect(this.config.successUrl)
               .header("Set-Cookie", setCookieHeader || "");
           }
           
-          return VattsResponse.json({ success: true })
+          return NytlexResponse.json({ success: true })
             .header("Set-Cookie", setCookieHeader || "");
         }
 
-        return VattsResponse.json(
+        return NytlexResponse.json(
           { error: "Session creation failed" },
           { status: 500 }
         );
@@ -259,8 +259,8 @@ export class DiscordProvider implements AuthProviderClass {
 Here's a full implementation of a Google OAuth provider:
 
 ```typescript
-import type { AuthProviderClass, AuthRoute, User } from "@vatts/auth";
-import { VattsRequest, VattsResponse } from "vatts";
+import type { AuthProviderClass, AuthRoute, User } from "@nytlex/auth";
+import { NytlexRequest, NytlexResponse } from "nytlex";
 
 export interface GoogleConfig {
   id?: string;
@@ -379,12 +379,12 @@ export class GoogleProvider implements AuthProviderClass {
     {
       method: "GET",
       path: "/api/auth/callback/google",
-      handler: async (req: VattsRequest) => {
+      handler: async (req: NytlexRequest) => {
         const url = new URL(req.url || "", "http://localhost");
         const code = url.searchParams.get("code");
 
         if (!code) {
-          return VattsResponse.json(
+          return NytlexResponse.json(
             { error: "Authorization code not provided" },
             { status: 400 }
           );
@@ -403,16 +403,16 @@ export class GoogleProvider implements AuthProviderClass {
           const setCookieHeader = authResponse.headers.get("set-cookie");
           
           if (this.config.successUrl) {
-            return VattsResponse
+            return NytlexResponse
               .redirect(this.config.successUrl)
               .header("Set-Cookie", setCookieHeader || "");
           }
           
-          return VattsResponse.json({ success: true })
+          return NytlexResponse.json({ success: true })
             .header("Set-Cookie", setCookieHeader || "");
         }
 
-        return VattsResponse.json(
+        return NytlexResponse.json(
           { error: "Session creation failed" },
           { status: 500 }
         );

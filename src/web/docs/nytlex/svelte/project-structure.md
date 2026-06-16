@@ -1,6 +1,6 @@
-# Project Structure - Vue
+# Project Structure - Svelte
 
-Understanding how Vatts.js organizes your files is essential for building clean, efficient, and scalable applications.
+Understanding how Nytlex.js organizes your files is essential for building clean, efficient, and scalable applications.
 
 This guide explains the folder structure, special files, and conventions used throughout the framework.
 
@@ -8,34 +8,34 @@ This guide explains the folder structure, special files, and conventions used th
 
 ## Overview
 
-A Vue Vatts.js project follows this structure:
+A Svelte Nytlex.js project follows this structure:
 
 ```
 my-project/
 ├── src/
 │   ├── web/
-│   │   ├── layout.vue
-│   │   ├── notFound.vue
+│   │   ├── layout.svelte
+│   │   ├── notFound.svelte
 │   │   ├── globals.css
-│   │   ├── page.vue
+│   │   ├── page.svelte
 │   │   ├── about/
-│   │   │   └── page.vue
+│   │   │   └── page.svelte
 │   │   ├── blog/
-│   │   │   ├── page.vue
+│   │   │   ├── page.svelte
 │   │   │   └── [id]/
-│   │   │       └── page.vue
+│   │   │       └── page.svelte
 │   │   └── components/
-│   │       └── Header.vue
+│   │       └── Header.svelte
 │   ├── backend/
 │   │   └── routes/
 │   │       ├── auth.ts
 │   │       ├── users.ts
 │   │       └── api.ts
-│   └── vattsweb.ts
+│   └── nytlex.ts
 ├── public/
 │   ├── favicon.ico
 │   └── images/
-├── vatts.config.ts
+├── nytlex.config.ts
 ├── tsconfig.json
 └── package.json
 ```
@@ -46,7 +46,7 @@ my-project/
 
 ### `/src`
 
-The main source directory where all application logic lives, including frontend, backend, and startup logic. You can use `.ts`, `.js`, or `.vue` files for your code.
+The main source directory where all application logic lives, including frontend, backend, and startup logic. You can use `.ts`, `.js`, or `.svelte` files for your code.
 
 ### `/public`
 
@@ -65,20 +65,20 @@ The `/src/web` directory contains all frontend-related code.
 
 ### Routing System (File-Based)
 
-Vatts uses a **file-based routing system** similar to Next.js.
+Nytlex uses a **file-based routing system** similar to Next.js.
 
 Routes are automatically generated based on file structure:
 
-- `/src/web/page.vue` → `/`
-- `/src/web/about/page.vue` → `/about`
-- `/src/web/blog/page.vue` → `/blog`
-- `/src/web/blog/[id]/page.vue` → `/blog/:id`
+- `/src/web/page.svelte` → `/`
+- `/src/web/about/page.svelte` → `/about`
+- `/src/web/blog/page.svelte` → `/blog`
+- `/src/web/blog/[id]/page.svelte` → `/blog/:id`
 
 No manual route configuration is required for the frontend. The framework resolves routes automatically from the filesystem.
 
 ---
 
-### `/src/web/layout.vue`
+### `/src/web/layout.svelte`
 
 The root layout that wraps every page in your application.
 
@@ -97,7 +97,7 @@ Key points:
 
 ---
 
-### `/src/web/notFound.vue`
+### `/src/web/notFound.svelte`
 
 Custom 404 page rendered when no route matches.
 
@@ -121,7 +121,7 @@ Usually includes:
 - CSS variables
 - base styling
 
-Imported inside `layout.vue`.
+Imported inside `layout.svelte`.
 
 ---
 
@@ -219,7 +219,7 @@ Ensures strict backend/frontend isolation.
 
 ## Instrumentation File
 
-### `/src/vattsweb.ts`
+### `/src/nytlex.ts`
 
 Runs once when the application starts.
 
@@ -242,7 +242,7 @@ Rules:
 
 ## Configuration Files
 
-### `vatts.config.ts`
+### `nytlex.config.ts`
 
 Main framework configuration file.
 
@@ -264,7 +264,7 @@ Required:
 ```json
 {
   "compilerOptions": {
-    "types": ["vatts/global"]
+    "types": ["nytlex/global"]
   }
 }
 ```
@@ -280,8 +280,8 @@ Example:
 ```json
 {
   "scripts": {
-    "dev": "vatts dev",
-    "start": "vatts start"
+    "dev": "nytlex dev",
+    "start": "nytlex start"
   }
 }
 ```

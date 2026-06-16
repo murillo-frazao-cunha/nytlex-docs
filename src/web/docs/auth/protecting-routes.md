@@ -1,6 +1,6 @@
 # Protecting Routes
 
-Learn how to restrict access to certain pages and API endpoints in your Vatts.js application, ensuring only authenticated users (or only guests) can access them.
+Learn how to restrict access to certain pages and API endpoints in your Nytlex.js application, ensuring only authenticated users (or only guests) can access them.
 
 ---
 
@@ -12,17 +12,17 @@ To protect backend routes, simply check the session status using `getSession` fr
 
 ```typescript
 import auth from "../auth";
-import { BackendRouteConfig, VattsResponse } from "vatts";
+import { BackendRouteConfig, NytlexResponse } from "nytlex";
 
 const route: BackendRouteConfig = {
   pattern: "/api/protected",
   GET: async (req, params) => {
     const session = await auth.auth.getSession(req);
     if (!session) {
-      return VattsResponse.json({ error: "Unauthorized" }, 401);
+      return NytlexResponse.json({ error: "Unauthorized" }, 401);
     }
     // User is authenticated
-    return VattsResponse.json({ message: "Welcome, " + session.user.name });
+    return NytlexResponse.json({ message: "Welcome, " + session.user.name });
   }
 };
 
@@ -36,7 +36,7 @@ export default route;
 
 ## Frontend: Protecting Pages and Components
 
-Vatts.js Auth provides flexible ways to protect frontend routes and components using hooks and helpers.
+Nytlex.js Auth provides flexible ways to protect frontend routes and components using hooks and helpers.
 
 ### Types
 - **GuestOnly**: Renders children only for unauthenticated users.
@@ -63,8 +63,8 @@ export function GuestOnly({ children, fallback, redirectTo }: GuardProps)
 
 ```typescript jsx
 import LoginPage from "../components/Login";
-import { RouteConfig } from "vatts/react";
-import { GuestOnly } from "@vatts/auth/react";
+import { RouteConfig } from "nytlex/react";
+import { GuestOnly } from "@nytlex/auth/react";
 import React from "react";
 
 const wrapper = () => {
@@ -79,7 +79,7 @@ export const config: RouteConfig = {
   pattern: '/login',
   component: wrapper,
   generateMetadata: () => ({
-    title: 'Vatts.js | Login'
+    title: 'Nytlex.js | Login'
   })
 };
 
@@ -107,7 +107,7 @@ export function AuthGuard({ children, fallback, redirectTo }: GuardProps)
 #### Example:
 
 ```typescript jsx
-import { AuthGuard } from "@vatts/auth/react";
+import { AuthGuard } from "@nytlex/auth/react";
 
 <AuthGuard fallback={<div>Please log in.</div>} redirectTo="/login">
   <ProtectedComponent />
@@ -122,7 +122,7 @@ import { AuthGuard } from "@vatts/auth/react";
 **Example:**
 
 ```typescript jsx
-import { AuthGuard } from "@vatts/auth/react";
+import { AuthGuard } from "@nytlex/auth/react";
 
 export default function DashboardPage() {
   return (

@@ -1,13 +1,13 @@
-# Vatts.js Configuration File (`vatts.config.ts`)
+# Nytlex.js Configuration File (`nytlex.config.ts`)
 
-This document explains every option available in your `vatts.config.ts` file. Use this as a reference to understand what each property does and how to configure your Vatts.js server.
+This document explains every option available in your `nytlex.config.ts` file. Use this as a reference to understand what each property does and how to configure your Nytlex.js server.
 
 ---
 
 ## Type Definition
 
 ```ts
-export interface VattsConfig {
+export interface NytlexConfig {
     /**
      * The port your server will listen on.
      * @example 3000
@@ -139,11 +139,11 @@ export interface VattsConfig {
 
 ## Property Explanations
 
-Below you’ll find a detailed explanation of every property and sub-property in the Vatts.js config file.
+Below you’ll find a detailed explanation of every property and sub-property in the Nytlex.js config file.
 
 ### `port`
 **Type:** `number`  
-The main port your Vatts.js server will listen on for HTTP/HTTPS traffic.  
+The main port your Nytlex.js server will listen on for HTTP/HTTPS traffic.  
 **Example:** `3000` (so your app runs at `http://localhost:3000`)
 
 ---
@@ -232,7 +232,7 @@ Configures HTTP security headers to help protect your app from common web vulner
 ### `customHeaders`
 **Type:** `Record<string, string>` *(optional)*  
 Add any custom HTTP headers to every response.  
-**Example:** `{ "X-Powered-By": "Vatts.js" }`
+**Example:** `{ "X-Powered-By": "Nytlex.js" }`
 
 ---
 
@@ -245,12 +245,12 @@ Specify a list of environment files to load (in order). Useful for managing secr
 
 ## Usage Example
 
-Copy the interface above into your `vatts.config.ts` file and export your configuration. You can use a function for dynamic config based on environment/phase:
+Copy the interface above into your `nytlex.config.ts` file and export your configuration. You can use a function for dynamic config based on environment/phase:
 
 ```ts
-import type { VattsConfigFunction } from 'vatts';
+import type { NytlexConfigFunction } from 'nytlex';
 
-const vattsConfig: VattsConfigFunction = (phase, { defaultConfig }) => {
+const nytlexConfig: NytlexConfigFunction = (phase, { defaultConfig }) => {
     return {
         ...defaultConfig,
         port: 3000,
@@ -258,6 +258,6 @@ const vattsConfig: VattsConfigFunction = (phase, { defaultConfig }) => {
     };
 };
 
-export default vattsConfig;
+export default nytlexConfig;
 ```
 

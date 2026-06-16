@@ -1,6 +1,6 @@
-# Layout in Vatts.js
+# Layout in Nytlex.js
 
-The `layout.tsx` file is the root layout component for your Vatts.js application. It wraps all pages and provides global configuration, metadata, and styles. Think of it as the template that surrounds every page in your application.
+The `layout.tsx` file is the root layout component for your Nytlex.js application. It wraps all pages and provides global configuration, metadata, and styles. Think of it as the template that surrounds every page in your application.
 
 ---
 
@@ -10,36 +10,36 @@ Here's a simple layout with essential features:
 
 ```tsx
 import React from 'react';
-import { Metadata } from "vatts/react";
+import {Metadata} from "nytlex/react";
 import './globals.css';
 
 interface LayoutProps {
-    children: React.ReactNode;
+   children: React.ReactNode;
 }
 
 export const metadata: Metadata = {
-    title: "My App",
-    description: "Welcome to my Vatts.js application",
-    viewport: "width=device-width, initial-scale=1.0",
+   title: "My App",
+   description: "Welcome to my Nytlex.js application",
+   viewport: "width=device-width, initial-scale=1.0",
 };
 
 export default function Layout({children}: LayoutProps) {
-    return (
-        <html lang="en">
-        <body>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-        </nav>
-        <main>
-            {children}
-        </main>
-        <footer>
-            © {new Date().getFullYear()} My App
-        </footer>
-        </body>
-        </html>
-    );
+   return (
+           <html lang="en">
+           <body>
+           <nav>
+              <a href="/">Home</a>
+              <a href="/about">About</a>
+           </nav>
+           <main>
+              {children}
+           </main>
+           <footer>
+              © {new Date().getFullYear()} My App
+           </footer>
+           </body>
+           </html>
+   );
 }
 ```
 
@@ -132,7 +132,7 @@ This is recommended for styles that should apply to the entire application, but 
 You can wrap your layout with any number of providers:
 
 ```tsx
-import { SessionProvider } from "@vatts/auth/react";
+import { SessionProvider } from "@nytlex/auth/react";
 import { ThemeProvider } from './context/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 

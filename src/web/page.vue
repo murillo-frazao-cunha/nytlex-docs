@@ -2,13 +2,13 @@
 import { ref, onMounted } from 'vue';
 import {
   Zap, Shield, Globe, Box, Github,
-  Search, Cpu, Layers,
+  Search, Cpu, Layers, Flame,
   Terminal, Wifi, Code, Network,
   Server, Gauge // Ícones novos para representar Go/Server e Performance
 } from 'lucide-vue-next';
 
-// Imports do framework Vatts (versão Vue)
-import { Link, VattsImage } from "vatts/vue";
+// Imports do framework Nytlex (versão Vue)
+import { Link, NytlexImage } from "nytlex/vue";
 
 // Componentes
 import Footer from "./components/Footer.vue";
@@ -17,15 +17,18 @@ import {dependencies} from "@/../package.json"
 
 // State
 const version = ref("1.0.0");
-const primaryColor = "#a8a8a8";
+const primaryColor = "#00344C";
 
 // Lifecycle
 onMounted(async () => {
   try {
-    const v = dependencies.vatts
-    if (v !== null) {
-      version.value = v;
-    }
+    const response = await fetch(
+        "https://registry.npmjs.org/nytlex"
+    );
+
+    const data = await response.json();
+
+    version.value = data["dist-tags"].latest;
   } catch (e) {
     console.error("Failed to fetch version", e);
   }
@@ -54,20 +57,20 @@ const featuresList = [
     border: "hover:border-purple-500/30"
   },
   {
-    icon: Zap,
-    title: "Low-Level Optimization",
-    desc: "Built-in bytecode optimizer for .js assets. Smaller bundles, faster parsing.",
-    color: "text-orange-400",
-    bg: "bg-orange-500/10",
-    border: "hover:border-orange-500/30"
-  },
-  {
     icon: Wifi,
     title: "Native HTTP/3 Support",
     desc: "The only framework with native HTTP and built-in HTTP/3 support.",
     color: "text-teal-400",
     bg: "bg-teal-500/10",
     border: "hover:border-teal-500/30"
+  },
+  {
+    icon: Network,
+    title: "Choose your framework",
+    desc: "Pick React, Vue, or Svelte and work your way — no lock-in, no headaches.",
+    color: "text-violet-400",
+    bg: "bg-violet-500/10",
+    border: "hover:border-violet-500/30"
   },
   {
     icon: Code,
@@ -86,21 +89,21 @@ const featuresList = [
     border: "hover:border-emerald-500/30"
   },
   {
-    icon: Network,
-    title: "Choose your framework",
-    desc: "Pick React or Vue and work your way — no lock-in, no headaches.",
-    color: "text-violet-400",
-    bg: "bg-violet-500/10",
-    border: "hover:border-violet-500/30"
-  }
+    icon: Flame,
+    title: "Native Svelte support",
+    desc: "Build highly reactive, compile-time optimized interfaces with zero boilerplate.",
+    color: "text-red-400",
+    bg: "bg-red-500/10",
+    border: "hover:border-red-500/30"
+  },
 ];
 </script>
 <script lang="ts">
-import {Metadata} from "vatts/vue";
+import {Metadata} from "nytlex/vue";
 
 export function generateMetadata(): Metadata {
   return {
-    title: 'Vatts.js | Landing'
+    title: 'Nytlex.js | The Fastest Framework for Web'
   }
 }
 </script>
@@ -114,7 +117,7 @@ export function generateMetadata(): Metadata {
 
       <div class="relative z-10 max-w-5xl mx-auto">
         <div
-            class="vatts-reveal vatts-reveal-fade inline-block px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[10px] font-bold uppercase tracking-[0.2em] mb-8 shadow-lg"
+            class="nytlex-reveal nytlex-reveal-fade inline-block px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[10px] font-bold uppercase tracking-[0.2em] mb-8 shadow-lg"
             :style="{ '--d': '0ms' }"
         >
           Framework v{{ version }} {{ version.includes("canary") ? "" : 'Stable' }}
@@ -122,7 +125,7 @@ export function generateMetadata(): Metadata {
 
         <h1
             ref="heroTitle"
-            class="vatts-reveal vatts-reveal-up vatts-stagger text-6xl md:text-[100px] font-black text-white tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl"
+            class="nytlex-reveal nytlex-reveal-up nytlex-stagger text-6xl md:text-[100px] font-black text-white tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl"
             :style="{ '--d': '90ms' }"
         >
           THE FRAMEWORK <br/>
@@ -131,19 +134,19 @@ export function generateMetadata(): Metadata {
 
         <p
             ref="heroSubtitle"
-            class="vatts-reveal vatts-reveal-up vatts-stagger max-w-2xl text-lg md:text-xl text-slate-300 leading-relaxed mb-12 font-medium drop-shadow-md"
+            class="nytlex-reveal nytlex-reveal-up nytlex-stagger max-w-2xl text-lg md:text-xl text-slate-300 leading-relaxed mb-12 font-medium drop-shadow-md"
             :style="{ '--d': '160ms' }"
         >
-          Vatts.js is a high-performance full-stack primitive. It combines Node.js orchestration with a <strong class="text-white">Go-powered HTTP/3 core</strong> for unmatched speed and raw power.
+          Nytlex.js is a high-performance full-stack primitive. It combines Node.js orchestration with a <strong class="text-white">Go-powered HTTP/3 core</strong> for unmatched speed and raw power.
         </p>
 
         <div
             ref="heroButtons"
-            class="vatts-reveal vatts-reveal-up vatts-stagger flex flex-col sm:flex-row items-center gap-5"
+            class="nytlex-reveal nytlex-reveal-up nytlex-stagger flex flex-col sm:flex-row items-center gap-5"
             :style="{ '--d': '230ms' }"
         >
-          <div :class="`p-[2px] rounded-2xl bg-gradient-to-br from-white/30 via-white/20 to-white/10 hover:from-white/40 hover:to-white/20 transition-all duration-500 vatts-tilt vatts-sheen`">
-            <div ref="heroCmd" class="vatts-reveal vatts-reveal-fade vatts-stagger relative max-w-md" :style="{ '--d': '230ms' }">
+          <div :class="`p-[2px] rounded-2xl bg-gradient-to-br from-white/30 via-white/20 to-white/10 hover:from-white/40 hover:to-white/20 transition-all duration-500 nytlex-tilt nytlex-sheen`">
+            <div ref="heroCmd" class="nytlex-reveal nytlex-reveal-fade nytlex-stagger relative max-w-md" :style="{ '--d': '230ms' }">
               <div class="absolute inset-0 bg-white/30 blur-3xl rounded-full" />
               <Link href="/docs" class="text-black relative flex items-center justify-between gap-4 px-8 py-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-[14px] text-[18px] font-bold shadow-2xl hover:from-white hover:to-gray-100 transition-all">
                 Get started
@@ -151,12 +154,12 @@ export function generateMetadata(): Metadata {
             </div>
           </div>
 
-          <div :class="`p-[2px] rounded-2xl bg-gradient-to-br from-white/20 to-white/5 hover:from-white/30 hover:to-[${primaryColor}]/30 transition-all duration-500 vatts-tilt vatts-sheen`">
-            <div ref="heroCmd" class="vatts-reveal vatts-reveal-fade vatts-stagger relative max-w-md" :style="{ '--d': '230ms' }">
+          <div :class="`p-[2px] rounded-2xl bg-gradient-to-br from-white/20 to-white/5 hover:from-white/30 hover:to-[${primaryColor}]/30 transition-all duration-500 nytlex-tilt nytlex-sheen`">
+            <div ref="heroCmd" class="nytlex-reveal nytlex-reveal-fade nytlex-stagger relative max-w-md" :style="{ '--d': '230ms' }">
               <div :class="`absolute inset-0 bg-[${primaryColor}]/30 blur-3xl rounded-full`" />
               <div class="relative flex items-center justify-between gap-4 px-6 py-4 bg-black/60 backdrop-blur-xl border border-white/20 rounded-[14px] text-sm font-mono shadow-2xl">
                 <span :style="{ color: primaryColor }">$</span>
-                <span class="text-slate-200 flex-1 text-left font-medium">npx create-vatts-app@latest</span>
+                <span class="text-slate-200 flex-1 text-left font-medium">npx @nytlex/create@latest</span>
                 <Terminal :size="16" class="text-slate-500" />
               </div>
             </div>
@@ -180,51 +183,15 @@ export function generateMetadata(): Metadata {
       </div>
 
       <section class="relative z-10 max-w-6xl mx-auto px-6 py-32">
-        <div ref="archHeader" class="vatts-reveal vatts-reveal-up flex flex-col items-center mb-20">
+        <div ref="archHeader" class="nytlex-reveal nytlex-reveal-up flex flex-col items-center mb-20">
           <h2 class="text-4xl font-black text-white text-center drop-shadow-lg">Engineered for Excellence</h2>
           <div class="w-24 h-1.5 mt-6 rounded-full shadow-lg shadow-white/20" :style="{ backgroundColor: primaryColor }" />
         </div>
 
-        <div ref="archGrid" class="vatts-reveal vatts-reveal-up grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div ref="archGrid" class="nytlex-reveal nytlex-reveal-up grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-yellow-500/30 via-white/15 to-white/5 hover:from-yellow-500/50 hover:via-white/25 transition-all duration-500 vatts-tilt vatts-sheen">
-            <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col">
-              <div class="flex items-start gap-5 mb-8 relative z-10">
-                <div class="shrink-0 p-3 bg-yellow-500/20 rounded-xl border border-yellow-500/30 shadow-lg shadow-yellow-500/10">
-                  <VattsImage src="https://esbuild.github.io/favicon.svg" width="28px" height="28px" alt="Esbuild" />
-                </div>
-                <div class="flex-1">
-                  <div class="flex justify-between items-center mb-1">
-                    <h3 class="text-xl font-bold text-white">Esbuild</h3>
-                  </div>
-                  <p class="text-sm text-slate-300">Fast builds and maximum production performance.</p>
-                </div>
-              </div>
 
-              <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
-                <div class="flex justify-between text-slate-400 mb-3 pb-2">
-                  <span>builder.ts</span>
-                  <span class="text-yellow-400 text-[10px]">Node API</span>
-                </div>
-                <div class="space-y-1.5">
-                   <div class="flex flex-wrap gap-1">
-                    <span class="text-purple-400">import</span>
-                    <span>{</span>
-                    <span class="text-yellow-300">build</span>
-                    <span>}</span>
-                    <span class="text-purple-400">from</span>
-                    <span class="text-emerald-400">'esbuild'</span>
-                  </div>
-                  <div class="text-slate-500">// Efficient bundling</div>
-                </div>
-              </div>
-
-              <!-- Ambient glow -->
-              <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
-            </div>
-          </div>
-
-          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-cyan-500/30 via-white/15 to-white/5 hover:from-cyan-500/50 hover:via-white/25 transition-all duration-500 vatts-tilt vatts-sheen">
+          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-cyan-500/30 via-white/15 to-white/5 hover:from-cyan-500/50 hover:via-white/25 transition-all duration-500 nytlex-tilt nytlex-sheen">
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col">
               <div class="flex items-start gap-5 mb-8 relative z-10">
                 <div class="shrink-0 p-2.5 bg-cyan-500/20 rounded-xl border border-cyan-500/30 text-cyan-400 shadow-lg shadow-cyan-500/10">
@@ -238,22 +205,21 @@ export function generateMetadata(): Metadata {
                   <p class="text-sm text-slate-300">Instant interactions and seamless Suspense.</p>
                 </div>
               </div>
-               <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
+              <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
                 <div class="flex justify-between text-slate-400 mb-3 pb-2">
-                   <span>counter.tsx</span>
-                   <span class="text-cyan-400 text-[10px]">Client</span>
+                  <span>counter.tsx</span>
+                  <span class="text-cyan-400 text-[10px]">Client</span>
                 </div>
                 <div class="text-slate-300">
                   <span class="text-purple-400">const</span> [<span class="text-sky-400">s</span>, <span class="text-blue-400">set</span>] = <span class="text-yellow-300">useState</span>(<span class="text-emerald-400">0</span>)
                 </div>
-               </div>
+              </div>
 
-               <!-- Ambient glow -->
               <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
             </div>
           </div>
 
-          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-green-500/30 via-white/15 to-white/5 hover:from-green-500/50 hover:via-white/25 transition-all duration-500 vatts-tilt vatts-sheen">
+          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-green-500/30 via-white/15 to-white/5 hover:from-green-500/50 hover:via-white/25 transition-all duration-500 nytlex-tilt nytlex-sheen">
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col">
               <div class="flex items-start gap-5 mb-8 relative z-10">
                 <div class="shrink-0 p-3 bg-green-500/20 rounded-xl border border-green-500/30 shadow-lg shadow-green-500/10">
@@ -268,21 +234,50 @@ export function generateMetadata(): Metadata {
                 </div>
               </div>
               <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
-                 <div class="flex justify-between text-slate-400 mb-3 pb-2 border-b border-white/5">
-                   <span>App.vue</span>
-                   <span class="text-emerald-400 text-[10px]">Setup</span>
-                 </div>
-                 <div class="text-slate-300">
-                   <span class="text-purple-400">const</span> <span class="text-sky-400">val</span> = <span class="text-amber-400">ref</span>(<span class="text-pink-400">0</span>)
-                 </div>
+                <div class="flex justify-between text-slate-400 mb-3 pb-2 border-b border-white/5">
+                  <span>App.vue</span>
+                  <span class="text-emerald-400 text-[10px]">Setup</span>
+                </div>
+                <div class="text-slate-300">
+                  <span class="text-purple-400">const</span> <span class="text-sky-400">val</span> = <span class="text-amber-400">ref</span>(<span class="text-pink-400">0</span>)
+                </div>
               </div>
 
-              <!-- Ambient glow -->
               <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
             </div>
           </div>
 
-          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-blue-500/30 via-white/15 to-white/5 hover:from-blue-500/50 hover:via-white/25 transition-all duration-500 vatts-tilt vatts-sheen">
+          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-red-500/30 via-white/15 to-white/5 hover:from-red-500/50 hover:via-white/25 transition-all duration-500 nytlex-tilt nytlex-sheen">
+            <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col">
+              <div class="flex items-start gap-5 mb-8 relative z-10">
+                <div class="shrink-0 p-3 bg-red-500/20 rounded-xl border border-red-500/30 shadow-lg shadow-red-500/10 text-red-400">
+                  <svg viewBox="0 0 32 32" width="28" height="28" class="w-full h-full"><path fill="currentColor" d="M29.42 9.94c-1.39-1.58-3.41-2.46-5.55-2.42c-1.55.03-3.04.57-4.22 1.53l-3.34 2.71c-.44.36-.85.75-1.22 1.17c-.72.83-1.13 1.87-1.14 2.94c-.02 1.25.47 2.44 1.35 3.31a4.29 4.29 0 0 0 3.03 1.21c1.48 0 2.87-.58 3.93-1.64l.42-.42c.32-.32.32-.85 0-1.17c-.32-.32-.84-.32-1.16 0l-.42.42c-.74.74-1.72 1.15-2.78 1.15c-1.03 0-1.99-.39-2.72-1.1c-.65-.63-1.01-1.47-.95-2.22c.01-.74.31-1.44.84-1.99c.28-.29.58-.55.91-.79l3.32-2.69c.88-.72 1.99-1.12 3.13-1.14c1.56-.03 3.03.62 4.05 1.77c.93 1.05 1.41 2.4 1.35 3.82a5.53 5.53 0 0 1-1.56 3.52l-5.69 5.73c-1.9 1.91-4.43 2.97-7.1 2.98c-2.5.01-4.88-.93-6.69-2.66c-1.74-1.66-2.73-3.88-2.8-6.26c-.07-2.43.82-4.76 2.5-6.53l2.91-3.1a.85.85 0 0 1 1.21.01c.33.32.34.85-.02 1.18l-2.9 3.08c1.22-1.29 1.87 2.98 1.82 4.76c-.05-1.73-.77-3.35-2.04-4.56c-1.32-1.26-3.06-1.95-4.88-1.94c-1.95.01-3.79-.78-5.17 2.17l-5.7 5.75c-1.17-1.18-1.84-2.78-1.88-4.45c-.04 1.85-.38-3.63-1.22-5.16zM8.35 23.36c1.4 1.58 3.41 2.46 5.55 2.42c1.55-.03 3.04-.57 4.22-1.53l3.34-2.71c.44-.36.85-.75 1.22-1.17c.72-.83 1.13-1.87 1.14-2.94c.02-1.25-.47-2.44-1.35-3.31a4.29 4.29 0 0 0-3.03-1.21c-1.48 0-2.87.58-3.93 1.64l-.42.42c-.32.32-.32.85 0 1.17c.32.32.84.32 1.16 0l.42-.42c.74-.74 1.72-1.15 2.78-1.15c1.03 0 1.99.39 2.72 1.1c.65.63 1.01 1.47.95 2.22c-.01.74-.31 1.44-.84 1.99c-.28.29-.58.55-.91.79l-3.32 2.69c-.88.72-1.99 1.12-3.13 1.14c-1.56-.03-3.03-.62-4.05-1.77c-.93-1.05-1.41-2.4-1.35-3.82a5.53 5.53 0 0 1 1.56-3.52l5.69-5.73c1.9-1.91 4.43-2.97 7.1-2.98c2.5-.01 4.88.93 6.69 2.66c1.74 1.66 2.73 3.88 2.8 6.26c.07 2.43-.82 4.76-2.5 6.53l-2.91 3.1a.85.85 0 0 1-1.21-.01c-.33-.32-.34-.85-.02-1.18l2.9-3.08c1.22-1.29 1.87 2.98 1.82-4.76c-.05-1.73-.77-3.35-2.04-4.56c-1.32-1.26-3.06-1.95-4.88-1.94c-1.95.01-3.79-.78-5.17 2.17l-5.7 5.75c-1.17 1.18-1.84-2.78-1.88-4.45c-.04 1.85-.38-3.63-1.22-5.16z"/></svg>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between items-center mb-1">
+                    <h3 class="text-xl font-bold text-white">Svelte 5</h3>
+                    <span class="text-[10px] font-mono text-slate-400">Stable</span>
+                  </div>
+                  <p class="text-sm text-slate-300">Instant interactions and hyper-efficient compilation.</p>
+                </div>
+              </div>
+              <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
+                <div class="flex justify-between text-slate-400 mb-3 pb-2 border-b border-white/5">
+                  <span>App.svelte</span>
+                  <span class="text-red-400 text-[10px]">Component</span>
+                </div>
+                <div class="text-slate-300">
+                  <span class="text-purple-400">let</span> <span class="text-sky-400">val</span> = <span class="text-red-400">$state</span>(<span class="text-pink-400">0</span>)
+                </div>
+              </div>
+
+              <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
+            </div>
+          </div>
+
+
+
+          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-blue-500/30 via-white/15 to-white/5 hover:from-blue-500/50 hover:via-white/25 transition-all duration-500 nytlex-tilt nytlex-sheen">
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col">
               <div class="flex items-start gap-5 mb-8 relative z-10">
                 <div class="shrink-0 p-3 bg-blue-500/20 rounded-xl border border-blue-500/30 text-blue-400 shadow-lg shadow-blue-500/10">
@@ -291,7 +286,7 @@ export function generateMetadata(): Metadata {
                 <div class="flex-1">
                   <div class="flex justify-between items-center mb-1">
                     <h3 class="text-xl font-bold text-white">Hybrid Runtime</h3>
-                  
+
                   </div>
                   <p class="text-sm text-slate-300 mt-2">
                     We use a dedicated Go system to handle all HTTP traffic, offloading the event loop.
@@ -301,25 +296,23 @@ export function generateMetadata(): Metadata {
 
               <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
                 <div class="flex justify-between text-slate-400 mb-3 pb-2 border-b border-white/5">
-                  <span>vatts.config.ts</span>
+                  <span>nytlex.config.ts</span>
                   <span class="text-blue-400 text-[10px]">Network Layer</span>
                 </div>
                 <div class="space-y-1.5">
                   <div class="flex flex-wrap gap-1">
-  <span class="text-purple-400">func</span>
-  <span class="text-sky-400">StartHttpServer</span><span>()</span>
-  <span>{</span><span>}</span>
-</div>
-
+                    <span class="text-purple-400">func</span>
+                    <span class="text-sky-400">StartHttpServer</span><span>()</span>
+                    <span>{</span><span>}</span>
+                  </div>
                 </div>
               </div>
 
-              <!-- Ambient glow -->
               <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
             </div>
           </div>
 
-<div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-pink-500/30 via-white/15 to-white/5 hover:from-pink-500/50 hover:via-white/25 transition-all duration-500 vatts-tilt vatts-sheen">
+          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-pink-500/30 via-white/15 to-white/5 hover:from-pink-500/50 hover:via-white/25 transition-all duration-500 nytlex-tilt nytlex-sheen">
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col">
               <div class="flex items-start gap-5 mb-8 relative z-10">
                 <div class="shrink-0 p-3 bg-pink-500/20 rounded-xl border border-pink-500/30 shadow-lg shadow-pink-500/10">
@@ -335,7 +328,7 @@ export function generateMetadata(): Metadata {
                   <p class="text-sm text-slate-300">Modern utility-first design system built-in.</p>
                 </div>
               </div>
-               <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
+              <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
                 <div class="flex justify-between text-slate-400 mb-3 pb-2">
                   <span>styles.css</span>
                   <span class="text-pink-400 text-[10px]">Zero Runtime</span>
@@ -361,12 +354,11 @@ export function generateMetadata(): Metadata {
                 </div>
               </div>
 
-              <!-- Ambient glow -->
               <div class="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
             </div>
           </div>
 
-          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-orange-500/30 via-white/15 to-white/5 hover:from-orange-500/50 hover:via-white/25 transition-all duration-500 vatts-tilt vatts-sheen">
+          <div class="group relative p-[2px] rounded-2xl bg-gradient-to-br from-orange-500/30 via-white/15 to-white/5 hover:from-orange-500/50 hover:via-white/25 transition-all duration-500 nytlex-tilt nytlex-sheen">
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col">
               <div class="flex items-start gap-5 mb-8 relative z-10">
                 <div class="shrink-0 p-3 bg-orange-500/20 rounded-xl border border-orange-500/30 text-orange-400 shadow-lg shadow-orange-500/10">
@@ -382,66 +374,61 @@ export function generateMetadata(): Metadata {
                 </div>
               </div>
 
-
-              
               <div class="mt-auto bg-black/60 backdrop-blur-sm rounded-xl p-4 font-mono text-[11px] text-slate-300 border border-white/5">
-  <div class="flex justify-between text-slate-400 mb-3 pb-2">
-    <span>Terminal</span>
-    <span class="text-sky-400 text-[10px]">Optimizer</span>
-  </div>
+                <div class="flex justify-between text-slate-400 mb-3 pb-2">
+                  <span>Terminal</span>
+                  <span class="text-sky-400 text-[10px]">Optimizer</span>
+                </div>
 
-  <div class="space-y-1">
-    <div class="flex gap-3">
-      <span class="text-slate-500">18:16:20</span>
-      <span class="text-sky-400">Optimization summary:</span>
-    </div>
+                <div class="space-y-1">
+                  <div class="flex gap-3">
+                    <span class="text-slate-500">18:16:20</span>
+                    <span class="text-sky-400">Optimization summary:</span>
+                  </div>
 
-    <div class="flex gap-3">
-      <span class="text-slate-500">18:16:20</span>
-      <span>
-        Original&nbsp;:
-        <span class="text-emerald-400">427.24 KB</span>
-      </span>
-    </div>
+                  <div class="flex gap-3">
+                    <span class="text-slate-500">18:16:20</span>
+                    <span>
+                      Original&nbsp;:
+                      <span class="text-emerald-400">427.24 KB</span>
+                    </span>
+                  </div>
 
-    <div class="flex gap-3">
-      <span class="text-slate-500">18:16:20</span>
-      <span>
-        Final&nbsp;&nbsp;&nbsp;&nbsp;:
-        <span class="text-emerald-400">124.34 KB</span>
-      </span>
-    </div>
+                  <div class="flex gap-3">
+                    <span class="text-slate-500">18:16:20</span>
+                    <span>
+                      Final&nbsp;&nbsp;&nbsp;&nbsp;:
+                      <span class="text-emerald-400">124.34 KB</span>
+                    </span>
+                  </div>
 
-    <div class="flex gap-3">
-      <span class="text-slate-500">18:16:20</span>
-      <span>
-        Saved&nbsp;&nbsp;&nbsp;&nbsp;:
-        <span class="text-emerald-400">302.90 KB</span>
-        <span class="text-slate-500">(70.90%)</span>
-      </span>
-    </div>
-  </div>
-</div>
+                  <div class="flex gap-3">
+                    <span class="text-slate-500">18:16:20</span>
+                    <span>
+                      Saved&nbsp;&nbsp;&nbsp;&nbsp;:
+                      <span class="text-emerald-400">302.90 KB</span>
+                      <span class="text-slate-500">(70.90%)</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-              <!-- Ambient glow -->
               <div class="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
             </div>
           </div>
-
-          
 
         </div>
       </section>
 
       <section class="relative z-10 max-w-7xl mx-auto px-6 py-24">
-        <div ref="featHeader" class="vatts-reveal vatts-reveal-up mb-16">
-          <h2 class="text-3xl font-bold text-white mb-4 text-center drop-shadow-lg">What's in Vatts.js?</h2>
+        <div ref="featHeader" class="nytlex-reveal nytlex-reveal-up mb-16">
+          <h2 class="text-3xl font-bold text-white mb-4 text-center drop-shadow-lg">What's in Nytlex.js?</h2>
           <p class="text-slate-300 text-center max-w-2xl mx-auto">Everything you need to build great products on the web, packed into a cohesive framework.</p>
         </div>
 
-        <div ref="featGrid" class="vatts-reveal vatts-reveal-up grid grid-cols-1 md:grid-cols-3 gap-5 z-10">
+        <div ref="featGrid" class="nytlex-reveal nytlex-reveal-up grid grid-cols-1 md:grid-cols-3 gap-5 z-10">
 
-          <div :class="`md:col-span-2 group relative p-[2px] rounded-2xl bg-gradient-to-br from-cyan-500/30 via-white/15 to-white/5 hover:from-cyan-500/50 hover:via-white/25 transition-all duration-500 vatts-tilt vatts-sheen`">
+          <div :class="`md:col-span-2 group relative p-[2px] rounded-2xl bg-gradient-to-br from-cyan-500/30 via-white/15 to-white/5 hover:from-cyan-500/50 hover:via-white/25 transition-all duration-500 nytlex-tilt nytlex-sheen`">
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 flex flex-col justify-between">
 
               <div class="flex items-start gap-6 mb-8 relative z-10">
@@ -459,23 +446,22 @@ export function generateMetadata(): Metadata {
                   <p class="text-slate-300 max-w-md">Direct server-to-client communication. Expose your backend logic specifically to your frontend with zero boilerplate.</p>
                 </div>
               </div>
-              
+
               <div class="mt-auto relative z-10 rounded-xl bg-black/60 backdrop-blur-md p-4 font-mono text-[11px] leading-relaxed text-slate-300 shadow-2xl border border-white/5 transition-all duration-300 group-hover:border-cyan-500/30">
                 <div class="mb-3 flex items-center justify-between pb-2 text-slate-400">
                   <span class="text-xs">src/backend/actions.ts</span>
                   <span class="text-xs font-medium text-cyan-400">Server Side</span>
                 </div>
                 <div class="space-y-1.5">
-                    <span class="text-yellow-300">Expose</span>(<span class="text-blue-400">getUser</span>)
+                  <span class="text-yellow-300">Expose</span>(<span class="text-blue-400">getUser</span>)
                 </div>
               </div>
 
-              <!-- Ambient glow -->
               <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
             </div>
           </div>
 
-          <div :class="`group relative p-[2px] rounded-2xl bg-gradient-to-br from-blue-500/30 via-white/15 to-white/5 hover:from-blue-500/50 hover:via-white/25 transition-all duration-500 vatts-tilt vatts-sheen`">
+          <div :class="`group relative p-[2px] rounded-2xl bg-gradient-to-br from-blue-500/30 via-white/15 to-white/5 hover:from-blue-500/50 hover:via-white/25 transition-all duration-500 nytlex-tilt nytlex-sheen`">
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-8 overflow-hidden border border-white/10 transition-all duration-500 flex flex-col">
 
               <div class="flex items-start gap-6 mb-8 relative z-10">
@@ -485,23 +471,22 @@ export function generateMetadata(): Metadata {
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-2xl font-bold text-white mb-3">Vatts Auth</h3>
+                  <h3 class="text-2xl font-bold text-white mb-3">Nytlex Auth</h3>
                   <p class="text-slate-300">Secure session management built-in. Protect your routes and data effortlessly.</p>
                 </div>
               </div>
-              
+
               <div class="mt-auto relative z-10 rounded-xl bg-black/60 backdrop-blur-md p-4 font-mono text-[11px] leading-relaxed text-slate-300 shadow-2xl border border-white/5 transition-all duration-300 group-hover:border-blue-500/30">
-                 <div class="space-y-1 text-slate-300">
-                   <span class="text-purple-400">const</span> { <span class="text-sky-400">user</span> } = <span class="text-blue-400">useSession</span>()
-                 </div>
+                <div class="space-y-1 text-slate-300">
+                  <span class="text-purple-400">const</span> { <span class="text-sky-400">user</span> } = <span class="text-blue-400">useSession</span>()
+                </div>
               </div>
 
-              <!-- Ambient glow -->
               <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]"></div>
             </div>
           </div>
 
-          <div v-for="(item, idx) in featuresList" :key="idx" :class="`group relative p-[2px] rounded-2xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 hover:from-white/30 hover:via-white/20 transition-all duration-500 vatts-tilt vatts-sheen ${item.border}`" :style="{ transitionDelay: `${idx * 50}ms` }">
+          <div v-for="(item, idx) in featuresList" :key="idx" :class="`group relative p-[2px] rounded-2xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 hover:from-white/30 hover:via-white/20 transition-all duration-500 nytlex-tilt nytlex-sheen ${item.border}`" :style="{ transitionDelay: `${idx * 50}ms` }">
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-6 overflow-hidden border border-white/10 flex items-start gap-4">
               <div :class="`p-3 rounded-xl ${item.bg} ${item.color} shrink-0 shadow-lg border border-white/10`">
                 <component :is="item.icon" :size="24" />
@@ -512,8 +497,7 @@ export function generateMetadata(): Metadata {
                 <p class="text-sm text-slate-300 leading-relaxed">{{ item.desc }}</p>
               </div>
 
-              <!-- Subtle ambient glow per card color -->
-              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px] pointer-events-none" :style="{ background: `radial-gradient(circle at center, ${item.color.replace('text-', 'rgb(var(--tw-')}10 0%, transparent 70%)` }"></div>
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[14px]/50 pointer-events-none" :style="{ background: `radial-gradient(circle at center, ${item.color.replace('text-', 'rgb(var(--tw-')}10 0%, transparent 70%)` }"></div>
             </div>
           </div>
         </div>
@@ -522,7 +506,7 @@ export function generateMetadata(): Metadata {
       <section class="relative z-10 max-w-6xl mx-auto px-6 py-24">
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-16 items-center">
 
-          <div class="lg:col-span-2 vatts-reveal vatts-reveal-left">
+          <div class="lg:col-span-2 nytlex-reveal nytlex-reveal-left">
             <h2 class="text-4xl font-black text-white mb-6 leading-tight drop-shadow-lg">
               Built for <br/>
               <span class="bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Modern Devs.</span>
@@ -552,7 +536,7 @@ export function generateMetadata(): Metadata {
             </div>
           </div>
 
-          <div class="lg:col-span-3 vatts-reveal vatts-reveal-right relative p-[2px] rounded-2xl bg-gradient-to-br from-white/30 via-white/15 to-transparent shadow-3xl">
+          <div class="lg:col-span-3 nytlex-reveal nytlex-reveal-right relative p-[2px] rounded-2xl bg-gradient-to-br from-white/30 via-white/15 to-transparent shadow-3xl">
             <div class="bg-[#0a0a0c]/95 backdrop-blur-2xl rounded-[14px] overflow-hidden border border-white/20 font-mono text-[13px] leading-relaxed shadow-2xl">
 
               <div class="bg-gradient-to-r from-[#1a1a1c] to-[#161618] px-4 py-3 flex items-center justify-between border-b border-white/10">
@@ -561,26 +545,26 @@ export function generateMetadata(): Metadata {
                   <div class="w-3 h-3 rounded-full bg-yellow-500/80 shadow-sm" />
                   <div class="w-3 h-3 rounded-full bg-green-500/80 shadow-sm" />
                 </div>
-                <span class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Vatts CLI Session</span>
+                <span class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Nytlex CLI Session</span>
               </div>
 
               <div class="p-6 overflow-x-auto custom-scrollbar max-h-[450px] bg-black/40 backdrop-blur-sm">
                 <div class="flex gap-3 mb-4">
-                  <span class="text-slate-500">PS D:\Vatts&gt;</span>
-                  <span class="text-white font-medium">npx create-vatts-app@latest my-app</span>
+                  <span class="text-slate-500">PS D:\Nytlex&gt;</span>
+                  <span class="text-white font-medium">npx @nytlex/create@latest my-app</span>
                 </div>
 
                 <div class="space-y-1 mb-6">
                   <div class="flex gap-2">
                     <span class="text-cyan-400">?</span>
                     <span class="text-white">What framework do you want to use?</span>
-                    <span class="text-slate-500">(React/Vue)</span>
-                    <span class="text-slate-300">(vue)</span>
+                    <span class="text-slate-500">(React/Vue/Svelte)</span>
+                    <span class="text-slate-300">(svelte)</span>
                   </div>
                   <div class="flex gap-2">
                     <span class="text-cyan-400 font-bold">?</span>
                     <span class="text-white">Would you like to use recommended options?</span>
-                    <span class="text-slate-500">(Vue)</span>
+                    <span class="text-slate-500">(Svelte)</span>
                   </div>
                   <div class="pl-4 text-cyan-400 underline underline-offset-4 decoration-2 font-medium">
                     ❯ Yes, use recommended defaults - TypeScript, Tailwind CSS, Module Alias
@@ -604,7 +588,7 @@ export function generateMetadata(): Metadata {
                 <div class="pt-4 border-t border-white/10 space-y-4">
                   <div class="flex gap-3 items-center">
                     <span class="text-slate-600 text-[11px]">13:12:59</span>
-                    <span class="text-cyan-400 font-bold">Vatts.js</span>
+                    <span class="text-cyan-400 font-bold">nytlex.js</span>
                     <span class="text-slate-400">v{{ version }}</span>
                   </div>
 
@@ -620,7 +604,7 @@ export function generateMetadata(): Metadata {
                       <span class="text-slate-600">•</span> Runtime: <span class="text-emerald-400 font-medium">Node.js v25.4.0</span>
                     </div>
                     <div class="text-slate-300 flex gap-2">
-                      <span class="text-slate-600">•</span> Framework: <span class="text-cyan-400 font-medium">Vatts.js v{{ version }}</span>
+                      <span class="text-slate-600">•</span> Framework: <span class="text-cyan-400 font-medium">Nytlex.js v{{ version }}</span>
                     </div>
                   </div>
 
@@ -631,7 +615,7 @@ export function generateMetadata(): Metadata {
                   </div>
 
                   <div class="text-[11px] text-slate-600 pt-2 italic">
-                    Website: <span class="underline">https://vatts.mfraz.ovh</span>
+                    Website: <span class="underline">https://nytlex.mfraz.ovh</span>
                   </div>
                 </div>
               </div>
@@ -643,7 +627,7 @@ export function generateMetadata(): Metadata {
       <section class="relative z-10 max-w-4xl mx-auto px-6 py-32 text-center">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_70%)] pointer-events-none" />
 
-        <div class="vatts-reveal vatts-reveal-up relative">
+        <div class="nytlex-reveal nytlex-reveal-up relative">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-slate-300 mb-6">
             <Github :size="14" />
             <span>Open Source</span>
@@ -663,7 +647,7 @@ export function generateMetadata(): Metadata {
               Read the Documentation
             </Link>
 
-            <a href="https://github.com/murillo-frazao-cunha/vatts.js" target="_blank" rel="noreferrer" class="w-full sm:w-auto px-8 py-4 bg-[#111111] border border-white/10 text-white font-bold rounded-xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+            <a href="https://github.com/murillo-frazao-cunha/nytlex.js" target="_blank" rel="noreferrer" class="w-full sm:w-auto px-8 py-4 bg-[#111111] border border-white/10 text-white font-bold rounded-xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
               <Github :size="18" />
               Star on GitHub
             </a>

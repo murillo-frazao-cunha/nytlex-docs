@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from 'vatts/vue';
+import { Link } from 'nytlex/vue';
 import { ref, onMounted } from 'vue';
 
 
@@ -44,7 +44,7 @@ const reload = () => {
                 <span class="w-1.5 h-1.5 rounded-full bg-[#333]"></span>
               </div>
               <span class="text-[10px] text-[#555] uppercase tracking-wide">
-                vatts_debug.log
+                nytlex_debug.log
               </span>
             </div>
             <div class="p-4 text-[11px] leading-[1.8]">
@@ -56,7 +56,7 @@ const reload = () => {
                 <span class="text-[#eee]">GET {{ path }}</span>
               </div>
               <div class="block text-[#444]">
-                >> [Vatts] Exception: Route definition missing.
+                >> [Nytlex] Exception: Route definition missing.
               </div>
             </div>
           </div>
@@ -72,10 +72,11 @@ const reload = () => {
         </div>
 
         <div class="px-10 py-5 bg-[#0a0a0a] border-t border-[#1f1f1f]">
-          <a href="https://npmjs.com/package/vatts" target="_blank" class="flex items-center gap-3 no-underline text-[#888888] text-[13px] transition-colors hover:text-white group">
-            <img src="https://raw.githubusercontent.com/murillo-frazao-cunha/vatts.js/master/docs/public/logo.png" alt="Vatts Logo" class="w-[18px] h-[18px] opacity-80" />
+          <a href="https://npmjs.com/package/nytlex" target="_blank" class="flex items-center gap-3 no-underline text-[#888888] text-[13px] transition-colors hover:text-white group">
+
+            <img src="/favicon-dark.svg" alt="nytlex Logo" class="w-[18px] h-[18px] opacity-80" />
             <span>
-              Vatts.js 
+              Nytlex.js
             </span>
           </a>
         </div>

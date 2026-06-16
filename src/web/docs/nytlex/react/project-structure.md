@@ -1,6 +1,6 @@
 # Project Structure - React
 
-Understanding how Vatts.js organizes your files is essential for building clean, efficient, and scalable applications.
+Understanding how Nytlex.js organizes your files is essential for building clean, efficient, and scalable applications.
 
 This guide explains the folder structure, special files, and conventions used throughout the framework.
 
@@ -8,7 +8,7 @@ This guide explains the folder structure, special files, and conventions used th
 
 ## Overview
 
-A typical Vatts.js project follows this structure:
+A typical Nytlex.js project follows this structure:
 
 ```
 my-project/
@@ -31,11 +31,11 @@ my-project/
 │   │       ├── auth.ts
 │   │       ├── users.ts
 │   │       └── admin.ts
-│   └── vattsweb.ts
+│   └── nytlex.ts
 ├── public/
 │   ├── favicon.ico
 │   └── images/
-├── vatts.config.ts
+├── nytlex.config.ts
 ├── tsconfig.json
 └── package.json
 ```
@@ -67,7 +67,7 @@ The `/src/web` directory contains all frontend-related code.
 
 ### Routing System (File-Based)
 
-Vatts uses a **fully file-based routing system** for the frontend (similar to Next.js).
+Nytlex uses a **fully file-based routing system** for the frontend (similar to Next.js).
 
 Routes are automatically generated from the filesystem:
 
@@ -131,7 +131,7 @@ The `/src/backend` directory contains all server-side logic.
 
 ### `/src/backend/routes` (Path-Based Routing)
 
-Vatts.js uses a **fully explicit path-based backend routing system**.
+Nytlex.js uses a **fully explicit path-based backend routing system**.
 
 Key idea:
 
@@ -202,7 +202,7 @@ Guarantees strict frontend/backend isolation.
 
 ## Instrumentation File
 
-### `/src/vattsweb.ts`
+### `/src/nytlex.ts`
 
 Application bootstrap file executed once at startup.
 
@@ -225,7 +225,7 @@ Key details:
 
 ## Configuration Files
 
-### `vatts.config.ts`
+### `nytlex.config.ts`
 
 Main framework configuration.
 
@@ -247,7 +247,7 @@ Required:
 ```json
 {
   "compilerOptions": {
-    "types": ["vatts/global"]
+    "types": ["nytlex/global"]
   }
 }
 ```
@@ -263,8 +263,8 @@ Example:
 ```json
 {
   "scripts": {
-    "dev": "vatts dev",
-    "start": "vatts start"
+    "dev": "nytlex dev",
+    "start": "nytlex start"
   }
 }
 ```

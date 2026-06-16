@@ -1,11 +1,11 @@
-import introductionMd from "../docs/vatts/getting-started.md";
-import installationMd from "../docs/vatts/installation.md";
-import projectStructureMd from "../docs/vatts/project-structure.md";
-import layoutMd from "../docs/vatts/layout.md";
-import routingMd from "../docs/vatts/routing.md";
-import rpcMd from "../docs/vatts/rpc.md";
-import middlewaresMd from "../docs/vatts/middleware.md";
-import componentsMd from "../docs/vatts/components.md";
+import introductionMd from "@/web/docs/nytlex/getting-started.md";
+import installationMd from "@/web/docs/nytlex/installation.md";
+import projectStructureMd from "@/web/docs/nytlex/react/project-structure.md";
+import layoutMd from "@/web/docs/nytlex/react/layout.md";
+import routingMd from "@/web/docs/nytlex/react/routing.md";
+import rpcMd from "@/web/docs/nytlex/react/rpc.md";
+import middlewaresMd from "@/web/docs/nytlex/middleware.md";
+import componentsMd from "@/web/docs/nytlex/react/components.md";
 import gettingStartAuthMd from "../docs/auth/getting-started.md";
 import installationAuthMd from "../docs/auth/installation.md";
 import providersAuthMd from "../docs/auth/providers.md";
@@ -31,7 +31,6 @@ export type SearchHit = {
     score: number;
     snippet?: string;
 };
-
 
 
 function makeSnippet(content: string, queryNorm: string) {
@@ -106,20 +105,27 @@ function normalize(text: string) {
 
 
 // vue imports
-import projectStructureVue from "../docs/vatts/vue/project-structure.md"
-import layoutVue from "../docs/vatts/vue/layout.md"
-import routingVue from "../docs/vatts/vue/routing.md"
-import rpcVue from "../docs/vatts/vue/rpc.md"
-import componentsVue from "../docs/vatts/vue/components.md"
+import projectStructureVue from "@/web/docs/nytlex/vue/project-structure.md"
+import layoutVue from "@/web/docs/nytlex/vue/layout.md"
+import routingVue from "@/web/docs/nytlex/vue/routing.md"
+import rpcVue from "@/web/docs/nytlex/vue/rpc.md"
+import componentsVue from "@/web/docs/nytlex/vue/components.md"
 
 
-import configFile from "../docs/vatts/configFile.md"
+// svelte imports
+import projectStructureSvelte from "@/web/docs/nytlex/svelte/project-structure.md"
+import layoutSvelte from "@/web/docs/nytlex/svelte/layout.md"
+import routingSvelte from "@/web/docs/nytlex/svelte/routing.md"
+import rpcSvelte from "@/web/docs/nytlex/svelte/rpc.md"
+import componentsSvelte from "@/web/docs/nytlex/svelte/components.md"
+
+import configFile from "@/web/docs/nytlex/configFile.md"
 
 export const sidebarConfig = {
     sections: [
         {
-            id: 'vatts',
-            title: "Vatts.js",
+            id: 'nytlex',
+            title: "Nytlex.js",
             items: [
                 {
                     id: "introduction",
@@ -139,14 +145,18 @@ export const sidebarConfig = {
                     label: "Project Structure",
                     file: {
                         react: projectStructureMd,
-                        vue: projectStructureVue
+                        vue: projectStructureVue,
+                        svelte: projectStructureSvelte
                     },
                 },
                 {id: 'configuration', icon: 'FaCog', label: 'Configuration', file: configFile},
-                { id: "layout", icon: "FaDiagramProject", label: "Layout System", file: {
-                    react: layoutMd,
-                        vue: layoutVue
-                    } },
+                {
+                    id: "layout", icon: "FaDiagramProject", label: "Layout System", file: {
+                        react: layoutMd,
+                        vue: layoutVue,
+                        svelte: layoutSvelte
+                    }
+                },
                 {
                     id: "routing",
                     icon: "FaCodeCompare",
@@ -154,34 +164,39 @@ export const sidebarConfig = {
                     file: {
                         react: routingMd,
                         vue: routingVue,
+                        svelte: routingSvelte
                     }
                 },
-                { id: "rpc", icon: "FaGlobe", label: "RPC System", file: {
-                    react: rpcMd,
-                        vue: rpcVue
-                    } },
-                { id: "middlewares", icon: "FaWrench", label: "Middlewares", file: middlewaresMd },
+                {
+                    id: "rpc", icon: "FaGlobe", label: "RPC System", file: {
+                        react: rpcMd,
+                        vue: rpcVue,
+                        svelte: rpcSvelte
+                    }
+                },
+                {id: "middlewares", icon: "FaWrench", label: "Middlewares", file: middlewaresMd},
                 {
                     id: 'components',
                     icon: 'FaCube',
                     label: 'Components',
                     file: {
                         react: componentsMd,
-                        vue: componentsVue
+                        vue: componentsVue,
+                        svelte: componentsSvelte
                     }
                 }
             ]
         },
         {
             id: 'auth',
-            title: "Vatts Auth",
+            title: "Nytlex Auth",
             items: [
-                { id: 'introduction-auth', icon: 'FaShield', label: 'Overview', file: gettingStartAuthMd },
-                { id: 'installation-auth', icon: 'FaDownload', label: 'Setup Auth', file: installationAuthMd },
-                { id: "providers", icon: "FaBolt", label: "Providers", file: providersAuthMd },
-                { id: "sessions", icon: "FaFile", label: "Sessions", file: sessionsAuthMd },
-                { id: 'protecting-routes', icon: 'FaLock', label: 'Protecting Routes', file: protectingRoutesAuthMd },
-                { id: 'custom-providers', icon: 'FaCode', label: 'Custom Providers', file: customProvidersAuthMd },
+                {id: 'introduction-auth', icon: 'FaShield', label: 'Overview', file: gettingStartAuthMd},
+                {id: 'installation-auth', icon: 'FaDownload', label: 'Setup Auth', file: installationAuthMd},
+                {id: "providers", icon: "FaBolt", label: "Providers", file: providersAuthMd},
+                {id: "sessions", icon: "FaFile", label: "Sessions", file: sessionsAuthMd},
+                {id: 'protecting-routes', icon: 'FaLock', label: 'Protecting Routes', file: protectingRoutesAuthMd},
+                {id: 'custom-providers', icon: 'FaCode', label: 'Custom Providers', file: customProvidersAuthMd},
             ]
         }
     ]

@@ -1,16 +1,16 @@
 # Getting Started
 
-Welcome to the **@vatts/auth** documentation!
+Welcome to the **@nytlex/auth** documentation!
 
-This section gives you an overview of how authentication works in Vatts.js and what makes it powerful and flexible. Here, you'll understand the foundation of the authentication system before diving into implementation details.
+This section gives you an overview of how authentication works in Nytlex.js and what makes it powerful and flexible. Here, you'll understand the foundation of the authentication system before diving into implementation details.
 
 ---
 
 ## Overview
 
-**@vatts/auth** is a complete authentication solution built for simplicity and extensibility. It lets you add authentication to your Vatts.js applications with minimal setup, while providing the flexibility to customize every aspect of the auth flow.
+**@nytlex/auth** is a complete authentication solution built for simplicity and extensibility. It lets you add authentication to your Nytlex.js applications with minimal setup, while providing the flexibility to customize every aspect of the auth flow.
 
-@vatts/auth focuses on:
+@nytlex/auth focuses on:
 
 * Multiple authentication providers out of the box
 * Secure session management
@@ -18,7 +18,7 @@ This section gives you an overview of how authentication works in Vatts.js and w
 * Built-in React hooks and components
 * Automatic CSRF protection
 
-Whether you need simple email/password authentication or complex OAuth flows, @vatts/auth gives you the tools to implement authentication securely and efficiently.
+Whether you need simple email/password authentication or complex OAuth flows, @nytlex/auth gives you the tools to implement authentication securely and efficiently.
 
 ---
 
@@ -26,7 +26,7 @@ Whether you need simple email/password authentication or complex OAuth flows, @v
 
 Before implementing authentication, you should be comfortable with:
 
-* **Vatts.js** basics and project structure
+* **Nytlex.js** basics and project structure
 * **React** hooks and components
 * **TypeScript** for type safety
 * **Async/await** patterns
@@ -41,7 +41,7 @@ A basic understanding of how JWT tokens and OAuth work will help you better cust
 <div class="next-steps">
   <a href="/docs/auth/installation-auth" class="step">
     <h3>Installation</h3>
-    <p>Learn how to install and configure @vatts/auth in your project.</p>
+    <p>Learn how to install and configure @nytlex/auth in your project.</p>
   </a>
   <a href="/docs/auth/providers" class="step">
     <h3>Authentication Providers</h3>

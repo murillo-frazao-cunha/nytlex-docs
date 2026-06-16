@@ -1,14 +1,66 @@
 <script lang="ts">
 import Navbar from '@/web/components/Navbar.vue';
-import type { Metadata } from "vatts/vue";
+import type { Metadata } from "nytlex/vue";
 export const metadata: Metadata = {
-  title: "Vatts.js | The Fastest Framework for React",
-  description: "The fastest and simplest web framework for React! Start building high-performance web applications today with Vatts.js.",
-  favicon: '/logo.png',
+  title: "Nytlex.js | The Fastest Framework for Web",
+  description: "The fastest and simplest web framework for React, Vue, and Svelte! Start building high-performance web applications today with Nytlex.js.",
+  keywords: [
+    "nytlex",
+    "nytlex.js",
+    "react",
+    "vue",
+    "svelte",
+    "framework",
+    "web",
+    "fast",
+    "http3",
+    "full-stack"
+  ],
+  author: "Murillo Frazão Cunha",
+  favicon: '/favicon.svg',
+  faviconDark: '/favicon-dark.svg',
+  viewport: "width=device-width, initial-scale=1.0",
+  themeColor: "#0a0a0c", // Cor combinando com o modo escuro puro do site
+  canonical: "https://nytlex.mfraz.ovh",
+  robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+
+  openGraph: {
+    title: "Nytlex.js | The Fastest Framework for Web",
+    description: "The fastest and simplest web framework for React, Vue, and Svelte!",
+    type: "website",
+    url: "https://nytlex.mfraz.ovh",
+    image: {
+      url: "https://nytlex.mfraz.ovh/logo-all.svg", // Puxando a arte completa para preview
+      width: 1200,
+      height: 630,
+      alt: "Nytlex.js Framework Logo"
+    },
+    siteName: "Nytlex.js",
+    locale: "en_US"
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Nytlex.js | The Fastest Framework for Web",
+    description: "The fastest and simplest web framework for React, Vue, and Svelte!",
+    image: "https://nytlex.mfraz.ovh/logo-all.svg",
+    imageAlt: "Nytlex.js Framework Logo"
+  },
+
+  language: "en-US",
+  charset: "UTF-8",
+  appleTouchIcon: "/apple-touch-icon.png",
+  manifest: "/site.webmanifest",
+
+  other: {
+    "generator": "Nytlex.js",
+    "application-name": "Nytlex"
+  },
+
   scripts: {
     "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2662588853991140": {
-      "crossorigin": 'anonymous',
-      "async": ""
+      "crossorigin": "anonymous",
+      "async": "true"
     }
   }
 };
@@ -16,7 +68,7 @@ export const metadata: Metadata = {
 
 <script setup lang="ts">
 import './globals.css';
-import { router } from 'vatts/vue'; // Necessário para identificar a mudança de página
+import { router } from 'nytlex/vue'; // Necessário para identificar a mudança de página
 
 // Equivalente ao onExitComplete={() => window.scrollTo(0, 0)}
 function onAfterLeave() {
@@ -26,7 +78,14 @@ function onAfterLeave() {
 
 <template>
   <Navbar />
-  <slot />
+
+  <Transition
+      name="page-transition"
+      mode="out-in"
+      @after-leave="onAfterLeave"
+  >
+    <component :is="$slots.default" :key="router.pathname" />
+  </Transition>
 </template>
 
 <style>

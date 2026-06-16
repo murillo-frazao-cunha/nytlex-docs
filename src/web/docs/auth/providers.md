@@ -1,12 +1,12 @@
 # Authentication Providers
 
-This section gives you an overview of the available authentication methods in Vatts.js.
+This section gives you an overview of the available authentication methods in Nytlex.js.
 
 ---
 
 ## Overview
 
-Vatts.js provides three built-in authentication providers to help you secure your applications:
+Nytlex.js provides three built-in authentication providers to help you secure your applications:
 
 * **Credentials Provider** for username/password authentication
 * **Google Provider** for Google OAuth authentication
@@ -39,7 +39,7 @@ export interface CredentialsConfig {
 #### Example Usage
 
 ```typescript
-import { CredentialsProvider } from '@vatts/auth';
+import { CredentialsProvider } from '@nytlex/auth';
 
 new CredentialsProvider({
     authorize(credentials: Record<string, string>): Promise<User | null> | User | null {
@@ -79,7 +79,7 @@ export interface GoogleConfig {
 
 #### Example Usage
 ```typescript
-import { GoogleProvider } from '@vatts/auth';
+import { GoogleProvider } from '@nytlex/auth';
 
 new GoogleProvider({
     clientId: "your-client-id",
@@ -109,7 +109,7 @@ export interface DiscordConfig {
 #### Example Usage
 
 ```typescript
-import { DiscordProvider } from '@vatts/auth';
+import { DiscordProvider } from '@nytlex/auth';
 
 new DiscordProvider({
     clientId: "your-client-id",

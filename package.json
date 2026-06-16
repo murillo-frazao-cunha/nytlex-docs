@@ -1,23 +1,23 @@
 {
   "name": "docs",
   "version": "0.1.0",
-  "description": "Basic application for Vatts.js framework",
+  "description": "Basic application for Nytlex.js framework",
   "scripts": {
-    "start": "vatts start",
-    "dev": "vatts dev",
-    "export": "vatts export",
-    "build": "vatts export"
+    "start": "nytlex start",
+    "dev": "nytlex dev",
+    "export": "nytlex export",
+    "build": "nytlex export"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.2.0",
     "autoprefixer": "^10.4.24",
     "lucide-vue-next": "^0.563.0",
     "marked": "^17.0.3",
+    "nytlex": "0.0.1-canary.3",
     "postcss": "^8.5.6",
     "prismjs": "^1.30.0",
     "tailwindcss": "^4.2.0",
     "ts-node": "^10.9.2",
-    "vatts": "2.2.6",
     "vue": "^3.5.28"
   },
   "devDependencies": {

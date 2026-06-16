@@ -1,6 +1,6 @@
-# Routing in Vatts.js
+# Routing in Nytlex.js
 
-Vatts.js uses file-based routing for the **frontend** and configuration-based routing for the **backend**. This guide explains how routes work, how to create route files, and what patterns you can use.
+Nytlex.js uses file-based routing for the **frontend** and configuration-based routing for the **backend**. This guide explains how routes work, how to create route files, and what patterns you can use.
 
 ---
 
@@ -18,7 +18,7 @@ Frontend routes are created automatically from the file structure in `/src/web`.
 
 ### Dynamic Segments
 
-Vatts.js supports the following dynamic segment formats in folder names:
+Nytlex.js supports the following dynamic segment formats in folder names:
 
 | Segment         | Matches                | Does Not Match |
 |-----------------|------------------------|----------------|
@@ -67,7 +67,7 @@ Vatts.js supports the following dynamic segment formats in folder names:
 
 ```tsx
 // src/web/blog/[id]/page.tsx
-import { Metadata } from "vatts/react";
+import { Metadata } from "nytlex/react";
 
 export default function App({ params }: { params: { id: string } }) {
     return (
@@ -82,9 +82,9 @@ export function generateMetadata(
     { params }: { params: { id: string } }
 ): Metadata {
     return {
-        title: `Blog Post ${params.id} | Vatts.js`,
+        title: `Blog Post ${params.id} | Nytlex.js`,
         description: `Read the blog post with ID ${params.id}`,
-        keywords: ["blog", "vatts", params.id]
+        keywords: ["blog", "nytlex", params.id]
     };
 }
 ```
@@ -162,7 +162,7 @@ export interface BackendRouteConfig {
 
     WS?: WebSocketHandler;
 
-    middleware?: VattsMiddleware[];
+    middleware?: NytlexMiddleware[];
 }
 ```
 
@@ -174,15 +174,15 @@ export interface BackendRouteConfig {
 
 ```ts
 // src/backend/routes/api/version.ts
-import { BackendRouteConfig, VattsResponse } from "vatts";
+import { BackendRouteConfig, NytlexResponse } from "nytlex";
 
 const route: BackendRouteConfig = {
     pattern: "/api/version",
 
     GET: () => {
-        return VattsResponse.json({
+        return NytlexResponse.json({
             version: "1.0.0",
-            name: "Vatts.js Example"
+            name: "Nytlex.js Example"
         });
     }
 };
@@ -196,7 +196,7 @@ export default route;
 
 ```ts
 // src/backend/routes/api/users.ts
-import { BackendRouteConfig, VattsResponse } from "vatts";
+import { BackendRouteConfig, NytlexResponse } from "nytlex";
 
 const users = new Map<string, { id: string; name: string }>();
 
@@ -208,12 +208,12 @@ const route: BackendRouteConfig = {
         if (params.id) {
             const user = users.get(params.id);
 
-            if (!user) return VattsResponse.notFound();
+            if (!user) return NytlexResponse.notFound();
 
-            return VattsResponse.json(user);
+            return NytlexResponse.json(user);
         }
 
-        return VattsResponse.json([...users.values()]);
+        return NytlexResponse.json([...users.values()]);
     },
 
     // Create user
@@ -223,27 +223,27 @@ const route: BackendRouteConfig = {
 
         users.set(id, { id, ...user });
 
-        return VattsResponse.json({ id }, { status: 201 });
+        return NytlexResponse.json({ id }, { status: 201 });
     },
 
     // Update user
     PUT: async (request, params) => {
-        if (!params.id) return VattsResponse.badRequest();
+        if (!params.id) return NytlexResponse.badRequest();
 
         const user = await request.json();
 
         users.set(params.id, { ...user, id: params.id });
 
-        return VattsResponse.json({ success: true });
+        return NytlexResponse.json({ success: true });
     },
 
     // Delete user
     DELETE: async (_request, params) => {
-        if (!params.id) return VattsResponse.badRequest();
+        if (!params.id) return NytlexResponse.badRequest();
 
         users.delete(params.id);
 
-        return VattsResponse.json({ success: true });
+        return NytlexResponse.json({ success: true });
     }
 };
 
@@ -258,7 +258,7 @@ export default route;
 
 ```ts
 // src/backend/routes/ws/chat.ts
-import { BackendRouteConfig, WebSocket } from "vatts";
+import { BackendRouteConfig, WebSocket } from "nytlex";
 
 const connections = new Set<WebSocket>();
 

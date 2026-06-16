@@ -1,8 +1,8 @@
-# RPC in Vatts.js
+# RPC in Nytlex.js
 
-Vatts.js provides a **built-in, type-safe RPC system** that lets your frontend call backend functions **directly**, without manually creating APIs, routes, or HTTP clients.
+Nytlex.js provides a **built-in, type-safe RPC system** that lets your frontend call backend functions **directly**, without manually creating APIs, routes, or HTTP clients.
 
-This is one of Vatts.js’ **core differentiators**:
+This is one of Nytlex.js’ **core differentiators**:
 you write **normal backend functions**, expose them intentionally, and consume them on the frontend **as if they were local async functions** — fully typed and secure.
 
 ---
@@ -19,12 +19,12 @@ you write **normal backend functions**, expose them intentionally, and consume t
 
     * Import exposed server functions using `importServer()`.
     * Functions are **fully typed** and **always async**.
-    * Calls are transported securely through Vatts’s internal RPC layer.
+    * Calls are transported securely through Nytlex’s internal RPC layer.
 
 > ⚠️ **Important:**
 > Calling `Expose()` does **NOT** mean your function becomes a public HTTP endpoint.
 >
-> Exposed functions are **only accessible through Vatts’s RPC runtime**, not via URLs, REST, or direct web access.
+> Exposed functions are **only accessible through Nytlex’s RPC runtime**, not via URLs, REST, or direct web access.
 
 ---
 
@@ -63,8 +63,8 @@ Place your RPC functions inside a backend file
 ```ts
 // src/backend/helper.ts
 import os from "os";
-import Expose from "vatts/rpc";
-import type { VattsRequest } from "vatts";
+import Expose from "nytlex/rpc";
+import type { NytlexRequest } from "nytlex";
 
 type DiagnosticsInput = {
     message?: string;
@@ -95,7 +95,7 @@ function getOSName() {
 // - If you include it, it must come first.
 // - On the frontend, this parameter does NOT exist (the client never passes `_req`).
 export async function getServerDiagnostics(
-    _req: VattsRequest,
+    _req: NytlexRequest,
     input: DiagnosticsInput
 ): Promise<DiagnosticsResult> {
     return {
@@ -120,7 +120,7 @@ Expose(getServerDiagnostics, getPackageVersion);
 * Functions are **normal TypeScript functions**
 * `Expose()` is **explicit and intentional**
 * No routes, controllers, or HTTP handlers
-* `VattsRequest` is optional, and when used it must be the **first** parameter
+* `NytlexRequest` is optional, and when used it must be the **first** parameter
 * On the frontend, `_req` is never part of the call signature
 * If it’s not passed to `Expose()`, it **cannot be called**
 
@@ -131,7 +131,7 @@ Expose(getServerDiagnostics, getPackageVersion);
 On the frontend, use `importServer()` to load the exposed functions.
 
 ```tsx
-import { importServer } from "vatts/react";
+import { importServer } from "nytlex/react";
 
 // Typed import: gives you full intellisense + compile-time safety
 const api = importServer<typeof import("../../backend/helper")>(
@@ -161,13 +161,13 @@ export default function Example() {
 * Imported functions behave like normal async functions
 * With the typed `importServer<typeof import("...")>("...")` pattern, the frontend automatically inherits the backend function types (params + return)
 * No fetch, no axios, no manual API contracts
-* Serialization and transport are handled internally by Vatts
+* Serialization and transport are handled internally by Nytlex
 
 ---
 
 ## Security model
 
-Vatts’s RPC system is designed to be **secure by default**:
+Nytlex’s RPC system is designed to be **secure by default**:
 
 *  Functions are **not exposed via HTTP routes**
 *  Only explicitly exposed functions are callable
@@ -184,6 +184,6 @@ Vatts’s RPC system is designed to be **secure by default**:
 
 * Treat all imported RPC functions as **always async**
 * Keep RPC logic small and focused
-* Use `_req?: VattsRequest` only when you need request data
+* Use `_req?: NytlexRequest` only when you need request data
 * Never expose internal-only or unsafe functions
 * Think of RPC as **“server functions, safely callable from the client”**

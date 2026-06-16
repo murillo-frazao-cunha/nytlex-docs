@@ -5,7 +5,7 @@
 
 :root {
     /* Enhanced glassmorphism and premium design variables */
-    --vatts-glow: rgba(255, 255, 255, 0.12);
+    --nytlex-glow: rgba(255, 255, 255, 0.12);
     --reveal-duration: 900ms;
     --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
     --primary-orange: #71717a;
@@ -18,7 +18,7 @@
 body {
     @apply bg-black text-slate-400 antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: radial-gradient(ellipse at top, rgba(30, 30, 35, 0.4) 0%, #000000 50%);
+    background: black;
 }
 
 /* Custom Scrollbar */
@@ -198,13 +198,13 @@ body {
 }
 
 /* --- Animations / Utilities --- */
-@keyframes vatts-float {
+@keyframes nytlex-float {
     0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.4; }
     50% { transform: translate3d(0, -10px, 0); opacity: 0.7; }
 }
 
 /* Hover tilt/glow - Enhanced glassmorphism effect */
-.vatts-tilt:hover {
+.nytlex-tilt:hover {
     transform: perspective(900px) rotateX(6deg) rotateY(-8deg) translateY(-4px);
     box-shadow: 0 25px 90px -35px rgba(255, 255, 255, 0.2),
                 0 15px 60px -15px rgba(255, 255, 255, 0.15);
@@ -212,12 +212,12 @@ body {
 
 /* O restante das animações permanece igual para manter a fluidez */
 
-.vatts-sheen {
+.nytlex-sheen {
     position: relative;
     overflow: hidden;
 }
 
-.vatts-sheen::after {
+.nytlex-sheen::after {
     content: "";
     position: absolute;
     inset: -40% -60%;
@@ -227,11 +227,11 @@ body {
     pointer-events: none;
 }
 
-.vatts-sheen:hover::after {
-    animation: vatts-shimmer 1.6s var(--reveal-ease);
+.nytlex-sheen:hover::after {
+    animation: nytlex-shimmer 1.6s var(--reveal-ease);
 }
 
-@keyframes vatts-shimmer {
+@keyframes nytlex-shimmer {
     0% {
         opacity: 0;
         transform: translateX(-60%) skewX(-12deg);
@@ -245,8 +245,8 @@ body {
     }
 }
 
-.vatts-particle {
-    animation-name: vatts-float;
+.nytlex-particle {
+    animation-name: nytlex-float;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
 }
@@ -255,16 +255,16 @@ body {
     :root {
         --reveal-duration: 1ms;
     }
-    .vatts-particle,
+    .nytlex-particle,
     .animate-pulse {
         animation: none !important;
     }
-    .vatts-tilt,
-    .vatts-sheen::after {
+    .nytlex-tilt,
+    .nytlex-sheen::after {
         transition: none !important;
         animation: none !important;
     }
-    .vatts-reveal {
+    .nytlex-reveal {
         transition: none !important;
         animation: none !important;
     }
@@ -324,7 +324,7 @@ body {
 }
 
 /* Enhanced Reveal Animations */
-.vatts-reveal {
+.nytlex-reveal {
     opacity: 0;
     animation: fadeIn var(--reveal-duration) var(--reveal-ease) forwards;
 }

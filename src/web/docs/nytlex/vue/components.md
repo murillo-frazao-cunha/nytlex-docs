@@ -1,21 +1,21 @@
-# Components in Vatts.js
+# Components in Nytlex.js
 
-This page presents essential components for navigation and image optimization in Vatts.js web applications. These components are designed to be used in your frontend code and follow best practices for performance and developer experience.
+This page presents essential components for navigation and image optimization in Nytlex.js web applications. These components are designed to be used in your frontend code and follow best practices for performance and developer experience.
 
 ---
 
 ## Link (Navigation)
 
-The Link component enables fast client-side navigation between pages, using the Vatts.js router. It is imported from `vatts/vue`.
+The Link component enables fast client-side navigation between pages, using the Nytlex.js router. It is imported from `nytlex/vue`.
 
 ### Basic Example
 ```vue
 <script setup>
-import { Link } from "vatts/vue";
+import { Link } from "nytlex/vue";
 </script> 
 
 <template>
-  <Link href="/docs/vatts/components">Go to Components</Link>
+  <Link href="/docs/nytlex/components">Go to Components</Link>
 </template>
 ```
 
@@ -25,18 +25,18 @@ import { Link } from "vatts/vue";
 - Accepts all standard `<a>` props.
 
 #### How it works
-When clicked, Link intercepts the event and uses the Vatts.js router for navigation without a full page reload. This improves user experience and enables SPA-like navigation.
+When clicked, Link intercepts the event and uses the Nytlex.js router for navigation without a full page reload. This improves user experience and enables SPA-like navigation.
 
 ---
 
-## VattsImage (Optimized Images)
+## NytlexImage (Optimized Images)
 
-The VattsImage component (exported as `Image` or `VattsImage` from `vatts/vue`) automatically optimizes images, reducing layout shift and improving performance. It is recommended for all images in your app.
+The NytlexImage component (exported as `Image` or `NytlexImage` from `nytlex/vue`) automatically optimizes images, reducing layout shift and improving performance. It is recommended for all images in your app.
 
 ### Basic Example
 ```vue
 <script setup>
-  import {Image} from "vatts/vue";
+  import {Image} from "nytlex/vue";
 </script>
 
 <template>
@@ -52,7 +52,7 @@ The VattsImage component (exported as `Image` or `VattsImage` from `vatts/vue`) 
 - Accepts all standard `<img>` props.
 
 #### How it works
-- Local or base64 images are optimized via backend (`/_vatts/image`).
+- Local or base64 images are optimized via backend (`/_nytlex/image`).
 - External images (http) are not optimized.
 - Applies base styles to prevent layout shift if dimensions are provided.
 - Automatically strips `px` from width/height if passed as string.
@@ -62,6 +62,6 @@ The VattsImage component (exported as `Image` or `VattsImage` from `vatts/vue`) 
 
 ## Usage Recommendations
 - Always use `Link` for navigation between pages to leverage client-side routing.
-- Use `VattsImage` for all images to benefit from automatic optimization and layout stability.
+- Use `NytlexImage` for all images to benefit from automatic optimization and layout stability.
 - Provide explicit `width` and `height` to prevent layout shift.
 - Use `priority` for images that should load immediately (e.g., above the fold).

@@ -1,7 +1,7 @@
 
-# Layout in Vatts.js - Vue
+# Layout in Nytlex.js - Vue
 
-The `layout.vue` file is the root layout component for your Vatts.js application. It wraps all pages and provides global configuration, metadata, and styles. Think of it as the template that surrounds every page in your application.
+The `layout.vue` file is the root layout component for your Nytlex.js application. It wraps all pages and provides global configuration, metadata, and styles. Think of it as the template that surrounds every page in your application.
   
 ---  
 
@@ -11,10 +11,10 @@ Here's a simple layout with essential features:
 
 ```vue
 <script lang="ts">
-import type { Metadata } from "vatts/vue";
+import type { Metadata } from "nytlex/vue";
 
 export const metadata: Metadata = {  
- title: "My App", description: "Welcome to my Vatts.js application", viewport: "width=device-width, initial-scale=1.0",};  
+ title: "My App", description: "Welcome to my Nytlex.js application", viewport: "width=device-width, initial-scale=1.0",};  
 </script>
 
 <script setup lang="ts">
@@ -118,19 +118,19 @@ You can wrap your layout with any number of providers:
 
 ```vue
 <script lang="ts">  
-import type { Metadata } from "vatts/vue";  
+import type { Metadata } from "nytlex/vue";  
   
 export const metadata: Metadata = {  
-  title: "Vatts JS | The Fast and Simple Web Framework",  
-  description: "The fastest and simplest web framework! Start building high-performance web applications today with Vatts JS.",  
-  keywords: ["Vatts JS", "web framework", "React", "Vue", "JavaScript", "TypeScript", "web development", "fast", "simple", "SSR", "frontend"],  
-  author: "Vatts JS Team",  
+  title: "Nytlex JS | The Fast and Simple Web Framework",  
+  description: "The fastest and simplest web framework! Start building high-performance web applications today with Nytlex JS.",  
+  keywords: ["Nytlex JS", "web framework", "React", "Vue", "JavaScript", "TypeScript", "web development", "fast", "simple", "SSR", "frontend"],  
+  author: "Nytlex JS Team",  
 };  
 </script>  
   
 <script setup lang="ts">  
 import './globals.css';  
-import {SessionProvider} from "@vatts/auth/vue";  
+import {SessionProvider} from "@nytlex/auth/vue";  
 </script>  
   
 <template>  

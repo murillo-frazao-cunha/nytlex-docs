@@ -1,12 +1,12 @@
-# Middleware in Vatts.js
+# Middleware in Nytlex.js
 
-Middleware functions let you run code **before** or **after** a request is handled. Vatts.js provides a flexible middleware system that works based on folder structure and route configuration.
+Middleware functions let you run code **before** or **after** a request is handled. Nytlex.js provides a flexible middleware system that works based on folder structure and route configuration.
 
 ---
 
 ## Overview
 
-Middleware in Vatts.js can be:
+Middleware in Nytlex.js can be:
 - **Folder-based**: applies to all routes in a specific folder
 - **Route-specific**: applies only to a single route
 - **Chainable**: multiple middleware can run in sequence
@@ -39,33 +39,33 @@ src/
 
 ```typescript
 // src/backend/routes/middleware.ts
-import { VattsRequest, VattsResponse } from "vatts";
+import { NytlexRequest, NytlexResponse } from "nytlex";
 
 export function loggerMiddleware(
-    request: VattsRequest,
+    request: NytlexRequest,
     params: { [key: string]: string },
-    next: () => Promise<VattsResponse>
-): Promise<VattsResponse> | VattsResponse {
+    next: () => Promise<NytlexResponse>
+): Promise<NytlexResponse> | NytlexResponse {
     console.log(`[${new Date().toISOString()}] ${request.method} ${request.url}`);
     return next();
 }
 
 export function authMiddleware(
-    request: VattsRequest,
+    request: NytlexRequest,
     _params: { [key: string]: string },
-    next: () => Promise<VattsResponse>
-): Promise<VattsResponse> | VattsResponse {
+    next: () => Promise<NytlexResponse>
+): Promise<NytlexResponse> | NytlexResponse {
     const token = request.headers.get("authorization");
 
     if (!token) {
-        return VattsResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NytlexResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     return next();
 }
 ```
 
-> If you're using authentication, your project may also use `@vatts/auth` for session/user helpers.
+> If you're using authentication, your project may also use `@nytlex/auth` for session/user helpers.
 
 ### Middleware Scope
 
@@ -73,13 +73,13 @@ Each `middleware.ts` file only affects its immediate folder:
 
 ```typescript
 // src/backend/routes/auth/middleware.ts
-import { VattsRequest, VattsResponse } from "vatts";
+import { NytlexRequest, NytlexResponse } from "nytlex";
 
 export function authValidationMiddleware(
-    _request: VattsRequest,
+    _request: NytlexRequest,
     _params: { [key: string]: string },
-    next: () => Promise<VattsResponse>
-): Promise<VattsResponse> | VattsResponse {
+    next: () => Promise<NytlexResponse>
+): Promise<NytlexResponse> | NytlexResponse {
     // This middleware only applies to routes in the auth folder
     return next();
 }
@@ -91,13 +91,13 @@ export function authValidationMiddleware(
 
 You can override folder-level middleware at the route level using the `middleware` property in your route configuration.
 
-When you provide `middleware` on a route, Vatts.js will use **only** that list for the route (the folder middleware will be ignored for that specific file).
+When you provide `middleware` on a route, Nytlex.js will use **only** that list for the route (the folder middleware will be ignored for that specific file).
 
 ### Using Middleware in Routes
 
 ```typescript
 // src/backend/routes/users.ts
-import { BackendRouteConfig, VattsResponse } from "vatts";
+import { BackendRouteConfig, NytlexResponse } from "nytlex";
 import { loggerMiddleware, authMiddleware } from "./middleware";
 
 const route: BackendRouteConfig = {
@@ -107,7 +107,7 @@ const route: BackendRouteConfig = {
     middleware: [loggerMiddleware, authMiddleware],
 
     GET: async () => {
-        return VattsResponse.json({ users: [] });
+        return NytlexResponse.json({ users: [] });
     }
 };
 
