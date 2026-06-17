@@ -6,7 +6,7 @@
     "start": "nytlex start",
     "dev": "nytlex dev",
     "export": "nytlex export",
-    "build": "nytlex export"
+    "build": "nytlex build"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.2.0",
