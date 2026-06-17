@@ -109,15 +109,35 @@ onUnmounted(() => {
   />
 
   <nav class="sticky top-0 z-50 w-full border-b-[2px] border-white/10 bg-black backdrop-blur-2xl shadow-lg">
-    <div class="flex h-16 items-center justify-between px-6 max-w-8xl mx-auto">
+    <div class="flex h-16 items-center justify-between px-18 max-w-full mx-auto">
       <div class="flex items-center gap-6">
-        <Link href="/" class="relative group cursor-pointer flex items-center gap-3 mr-3">
-          <div
-              class="relative h-[150px] w-[150px] bg-white rounded-lg transition-transform group-hover:scale-105"
-              style="mask: url('/logo.svg') no-repeat center / contain; -webkit-mask: url('/logo.svg') no-repeat center / contain;"
-              aria-label="nytlex"
-          />
-        </Link>
+        <div class="flex items-center gap-3 mr-3">
+          <!-- Link da Logo Murillo Frazão -->
+          <a
+              href="https://mfraz.ovh"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="cursor-pointer flex items-center transition-transform hover:scale-105"
+          >
+            <img
+                src="https://mfraz.ovh/favicon.png"
+                alt="Murillo Frazão"
+                class="h-6 w-6 object-contain"
+            />
+          </a>
+
+          <!-- Separador / -->
+          <span class="text-white/30 text-xl font-light select-none">/</span>
+
+          <!-- Link da Logo Nytlex -->
+          <Link href="/" class="relative group cursor-pointer flex items-center">
+            <div
+                class="relative h-[150px] w-[150px] bg-white rounded-lg transition-transform group-hover:scale-105"
+                style="mask: url('/logo.svg') no-repeat center / contain; -webkit-mask: url('/logo.svg') no-repeat center / contain;"
+                aria-label="nytlex"
+            />
+          </Link>
+        </div>
 
         <template v-for="link in navLinks" :key="link.label">
           <a
