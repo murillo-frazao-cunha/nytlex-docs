@@ -7,7 +7,8 @@ import { marked } from 'marked';
 import {
   Zap, Book, BookOpen, Package, ChevronLeft, ChevronRight, ChevronDown,
   Download, FileText, Settings, GitCompare, Github, Globe, Palette,
-  Shield, Wrench, Code, Lock, Box, Workflow, Home, Search, Cog
+  Shield, Wrench, Code, Lock, Box, Workflow, Home, Search, Cog,
+  Menu, X // Ícones adicionados para o menu mobile
 } from 'lucide-vue-next';
 import { Link } from "nytlex/vue";
 
@@ -130,6 +131,7 @@ const htmlContent = ref('');
 const headings = ref<any[]>([]);
 const isDropdownOpen = ref(false);
 const isPrismReady = ref(false);
+const isMobileMenuOpen = ref(false); // Estado do menu mobile
 
 const getAllPages = () => {
   return sidebarConfig.sections.flatMap(section => section.items);
@@ -153,6 +155,11 @@ const getUrl = (itemId: string, newFramework?: string): string => {
 
   return newUrl
 };
+
+// Fecha o menu mobile automaticamente ao trocar de seção
+watch(activeSection, () => {
+  isMobileMenuOpen.value = false;
+});
 
 watch([activeSection, framework, isPrismReady], async () => {
   const currentItem = sidebarConfig.sections
@@ -241,7 +248,29 @@ onUnmounted(() => {
   <div class="font-dm relative min-h-screen bg-black text-slate-400 selection:bg-white/10 isolate flex flex-col">
 
     <div class="relative z-10 flex flex-1 min-w-0 bg-transparent">
-      <aside class="z-20 w-80 min-w-80 max-w-80 h-[calc(100vh-8rem)] mb-6 ml-6 sticky top-24 self-start hidden lg:flex flex-col rounded-2xl flex-none overflow-hidden shadow-2xl">
+
+      <div
+          v-if="isMobileMenuOpen"
+          @click="isMobileMenuOpen = false"
+          class="fixed inset-0 bg-black/40 z-40 lg:hidden"
+      ></div>
+
+      <aside
+          :class="[
+          'z-50 flex flex-col flex-none overflow-hidden transition-transform duration-300',
+          // Classes Mobile
+          'fixed inset-y-0 left-0 w-[280px] sm:w-[320px] bg-[#0a0a0c] border-r border-white/10',
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full',
+          // Classes Desktop
+          'lg:static lg:translate-x-0 lg:z-20 lg:w-80 lg:min-w-80 lg:max-w-80 lg:h-[calc(100vh-8rem)] lg:mb-6 lg:ml-6 lg:sticky lg:top-24 lg:self-start lg:bg-transparent lg:border-none lg:rounded-2xl lg:shadow-2xl'
+        ]"
+      >
+        <div class="lg:hidden flex justify-between items-center p-4 border-b border-white/5">
+          <span class="text-sm font-bold text-white uppercase tracking-wider">Navigation</span>
+          <button @click="isMobileMenuOpen = false" class="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-white/5">
+            <X :size="20" />
+          </button>
+        </div>
 
         <div class="p-4 border-b border-white/5 relative">
           <button
@@ -272,7 +301,7 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <nav class="flex-1 px-4 py-6 overflow-y-auto custom-scrollbar">
+        <nav class="flex-1 min-h-0 px-4 py-6 overflow-y-auto overscroll-contain custom-scrollbar pb-20 lg:pb-6">
           <div v-for="(section, idx) in sidebarConfig.sections" :key="idx" class="mb-8">
             <h3 class="px-4 text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] mb-4">
               {{ section.title }}
@@ -296,10 +325,8 @@ onUnmounted(() => {
         </nav>
       </aside>
 
-      <!-- Adicionado h-full e container de clipagem para segurar o fundo fixo sem vazar -->
       <main class="relative z-10 flex-1 min-w-0 [clip-path:inset(0)]">
 
-        <!-- Alterado para fixed-container de modo a travar o scroll do background -->
         <div class="pointer-events-none fixed-bg-container z-0">
           <div class="grid-background"> </div>
           <div class="grid-corner-circle circle-top-left"> </div>
@@ -308,12 +335,21 @@ onUnmounted(() => {
 
         <div class="flex flex-col min-w-0 relative z-10">
           <div class="scroll-content-container relative z-10 flex-1 min-h-0">
-            <div class="max-w-[900px] mx-auto px-8 py-16 min-w-0">
+            <div class="max-w-[900px] mx-auto px-6 md:px-8 py-8 md:py-16 min-w-0">
+
+              <button
+                  @click="isMobileMenuOpen = true"
+                  class="lg:hidden flex items-center gap-2 text-zinc-300 hover:text-white mb-8 px-4 py-3 bg-white/[0.03] hover:bg-white/[0.06] rounded-xl border border-white/10 w-full transition-colors"
+              >
+                <Menu :size="18" />
+                <span class="text-sm font-medium">Browse Documentation</span>
+              </button>
+
               <article class="markdown-content bg-transparent prose prose-invert max-w-none">
                 <div v-html="htmlContent"></div>
               </article>
 
-              <footer class="mt-24 pt-12 border-t border-white/[0.05] grid grid-cols-2 gap-8">
+              <footer class="mt-24 pt-12 border-t border-white/[0.05] grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                 <div v-if="getNavigationPages(activeSection).previous">
                   <Link
                       :href="getUrl(getNavigationPages(activeSection).previous!.id)"
@@ -323,7 +359,7 @@ onUnmounted(() => {
                     <div class="text-zinc-400 font-bold group-hover:text-white transition-colors">{{ getNavigationPages(activeSection).previous!.label }}</div>
                   </Link>
                 </div>
-                <div v-else></div>
+                <div v-else class="hidden md:block"></div>
 
                 <div v-if="getNavigationPages(activeSection).next">
                   <Link
@@ -334,7 +370,7 @@ onUnmounted(() => {
                     <div class="text-zinc-400 font-bold group-hover:text-white transition-colors">{{ getNavigationPages(activeSection).next!.label }}</div>
                   </Link>
                 </div>
-                <div v-else></div>
+                <div v-else class="hidden md:block"></div>
               </footer>
             </div>
           </div>

@@ -1,5 +1,28 @@
+<script setup lang="ts">
+import Navbar from "@/web/components/Navbar.vue";
+import './globals.css';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { router } from 'nytlex/vue';
+
+// Criamos um estado reativo pro Vue rastrear
+const currentPath = ref(router.pathname);
+
+onMounted(() => {
+  // Escutamos o evento do seu router e atualizamos o estado do Vue
+  const unsubscribe = router.subscribe(() => {
+    currentPath.value = router.pathname;
+  });
+
+  onUnmounted(() => {
+    unsubscribe();
+  });
+});
+
+function onAfterLeave() {
+  window.scrollTo(0, 0);
+}
+</script>
 <script lang="ts">
-import Navbar from '@/web/components/Navbar.vue';
 import type { Metadata } from "nytlex/vue";
 export const metadata: Metadata = {
   title: "Nytlex.js | The Fastest Framework for Web",
@@ -130,17 +153,6 @@ export const metadata: Metadata = {
   }
 };
 </script>
-
-<script setup lang="ts">
-import './globals.css';
-import { router } from 'nytlex/vue'; // Necessário para identificar a mudança de página
-
-// Equivalente ao onExitComplete={() => window.scrollTo(0, 0)}
-function onAfterLeave() {
-  window.scrollTo(0, 0);
-}
-</script>
-
 <template>
   <Navbar />
 
@@ -149,29 +161,22 @@ function onAfterLeave() {
       mode="out-in"
       @after-leave="onAfterLeave"
   >
-    <component :is="$slots.default" :key="router.pathname" />
+    <div :key="currentPath">
+      <slot />
+    </div>
   </Transition>
 </template>
 
 <style>
-/* Define a duração e a curva de transição.
-  cubic-bezier(0.22, 1, 0.36, 1) é a conversão CSS do ease: [0.22, 1, 0.36, 1]
-*/
+/* Transição moderna, suave e sem causar scroll horizontal */
 .page-transition-enter-active,
 .page-transition-leave-active {
-  transition: opacity 0.3s, transform 0.3s, filter 0.3s;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-/* Estado inicial de entrada (hidden) e final de saída (exit).
-  opacity: 0, scale: 0.98, filter: blur(5px)
-*/
 .page-transition-enter-from,
 .page-transition-leave-to {
   opacity: 0;
-  transform: scale(0.98);
-  filter: blur(5px);
+  transform: translateY(8px);
 }
-
-/* Estado ativo (enter) é o padrão do elemento, então não precisa declarar explicitamente o 'to' */
 </style>

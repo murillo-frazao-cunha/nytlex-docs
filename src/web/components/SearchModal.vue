@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
-import { Link } from "nytlex/vue"; // Import ajustado para nytlex/vue
+import { Link } from "nytlex/vue";
 import type { SearchDoc, SearchHit } from '../lib/searchIndex';
 import { searchDocs } from '../lib/searchIndex';
 
@@ -23,12 +23,39 @@ const emit = defineEmits<{
 // State
 const query = ref(props.initialQuery);
 const inputRef = ref<HTMLInputElement | null>(null);
-const primaryColor = "#ff6b35";
+const primaryColor = "#3b82f6";
+
+// Limpeza agressiva de Markdown (trator mode ativado)
+const stripMarkdown = (text: string) => {
+  if (!text) return '';
+  return text
+      // Remove links [texto](url) mantendo só o texto
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      // Remove headers (ex: #, ##, ###, não importa se tá no meio do texto)
+      .replace(/#{1,6}\s?/g, '')
+      // Remove horizontal rules (---, ***, ___)
+      .replace(/[-*_]{3,}/g, '')
+      // Remove negrito e itálico (*, **, _, __)
+      .replace(/[*_]{1,3}/g, '')
+      // Remove blockquotes (>)
+      .replace(/>+/g, '')
+      // Remove todas as crases de blocos de código
+      .replace(/`/g, '')
+      // Substitui quebras de linha e excesso de espaços por um espaço simples
+      .replace(/\s+/g, ' ')
+      .trim();
+};
 
 // Computed Search Results
 const results = computed<SearchHit[]>(() => {
   if (!query.value.trim()) return [];
-  return searchDocs(props.docs, query.value, 10);
+  const rawResults = searchDocs(props.docs, query.value, 10);
+
+  // Mapeia e limpa o snippet dos resultados
+  return rawResults.map(hit => ({
+    ...hit,
+    snippet: stripMarkdown(hit.snippet || '')
+  }));
 });
 
 // Handlers
@@ -63,14 +90,14 @@ onUnmounted(() => {
 
 <template>
   <div v-if="open" class="fixed inset-0 z-[100] flex items-start justify-center pt-[18vh] px-4">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-md" @click="onClose"></div>
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-md" @click="onClose"></div>
 
-    <div class="relative w-full max-w-2xl bg-[#0a0a0c] border border-white/10 rounded-2xl shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div class="relative w-full max-w-2xl bg-[#0a0a0c] border border-white/10 rounded-2xl shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
 
       <div class="h-px w-full" :style="{ background: `linear-gradient(90deg, transparent, ${primaryColor}, transparent)` }"></div>
 
       <div class="flex items-center px-6 py-5 border-b border-white/5">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-500 mr-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-blue-500 mr-4">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
         </svg>
 
@@ -104,7 +131,7 @@ onUnmounted(() => {
             <div class="flex items-center justify-between gap-4">
               <div class="flex items-center gap-4 min-w-0">
                 <div
-                    class="p-2.5 rounded-xl bg-white/5 transition-colors flex-none"
+                    class="p-2.5 rounded-xl bg-blue-500/10 transition-colors flex-none"
                     :style="{ color: primaryColor }"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -112,7 +139,7 @@ onUnmounted(() => {
                   </svg>
                 </div>
                 <div class="min-w-0">
-                  <div class="text-white font-bold text-base truncate group-hover:text-[#ff8559] transition-colors">
+                  <div class="text-white font-bold text-base truncate group-hover:text-blue-400 transition-colors">
                     {{ r.label }}
                   </div>
                   <div v-if="r.category" class="text-xs font-bold uppercase tracking-widest text-slate-500 mt-0.5">
@@ -120,11 +147,11 @@ onUnmounted(() => {
                   </div>
                 </div>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-700 group-hover:text-[#ff6b35] transition-all transform group-hover:translate-x-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-700 group-hover:text-blue-500 transition-all transform group-hover:translate-x-1">
                 <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
               </svg>
             </div>
-            <div v-if="r.snippet" class="mt-3 text-sm text-slate-500 line-clamp-2 leading-relaxed pl-[52px]">
+            <div v-if="r.snippet" class="mt-3 text-sm text-slate-400 line-clamp-2 leading-relaxed pl-[52px]">
               {{ r.snippet }}
             </div>
           </Link>

@@ -7,6 +7,7 @@ import type { SearchDoc } from "../lib/searchIndex";
 
 // JSON com os links da Navbar
 const navLinks = [
+  { label: "Home", href: "/", external: false, starts: false },
   { label: "Docs", href: "/docs", external: false },
   { label: 'Arts', href: '/arts', external: false },
   { label: "Npm", href: "https://npmjs.com/nytlex", external: true },
@@ -31,7 +32,7 @@ const docsForSearch = computed<SearchDoc[]>(() => {
 const activeLinksComputed = computed(() => {
   const active: { [key: string]: boolean } = {};
   navLinks.forEach((link) => {
-    active[link.href] = !link.external && !!currentPath.value && currentPath.value.startsWith(link.href);
+    active[link.href] = !link.external && !!currentPath.value && (link.starts ? currentPath.value.startsWith(link.href) : currentPath.value === link.href);
   });
   return active;
 });
@@ -109,9 +110,9 @@ onUnmounted(() => {
   />
 
   <nav class="sticky top-0 z-50 w-full border-b-[2px] border-white/10 bg-black backdrop-blur-2xl shadow-lg">
-    <div class="flex h-16 items-center justify-between px-18 max-w-full mx-auto">
-      <div class="flex items-center gap-6">
-        <div class="flex items-center gap-3 mr-3">
+    <div class="flex h-16 items-center justify-between px-4 md:px-8 max-w-full mx-auto">
+      <div class="flex items-center gap-4 md:gap-6 overflow-x-auto custom-scrollbar no-scrollbar">
+        <div class="flex items-center gap-2 md:gap-3 mr-1 md:mr-3 shrink-0">
           <!-- Link da Logo Murillo Frazão -->
           <a
               href="https://mfraz.ovh"
@@ -127,12 +128,12 @@ onUnmounted(() => {
           </a>
 
           <!-- Separador / -->
-          <span class="text-white/30 text-xl font-light select-none">/</span>
+          <span class="text-white/30 text-lg md:text-xl font-light select-none">/</span>
 
-          <!-- Link da Logo Nytlex -->
+          <!-- Link da Logo Nytlex (Tamanho corrigido para caber na navbar) -->
           <Link href="/" class="relative group cursor-pointer flex items-center">
             <div
-                class="relative h-[150px] w-[150px] bg-white rounded-lg transition-transform group-hover:scale-105"
+                class="relative h-6 w-20 md:w-24 bg-white rounded-lg transition-transform group-hover:scale-105"
                 style="mask: url('/logo.svg') no-repeat center / contain; -webkit-mask: url('/logo.svg') no-repeat center / contain;"
                 aria-label="nytlex"
             />
@@ -143,7 +144,7 @@ onUnmounted(() => {
           <a
               v-if="link.external"
               :href="link.href"
-              class="text-sm font-medium transition-colors"
+              class="text-xs md:text-sm font-medium transition-colors shrink-0"
               :class="getLinkClasses(link.href, link.external)"
           >
             {{ link.label }}
@@ -152,7 +153,7 @@ onUnmounted(() => {
           <Link
               v-else
               :href="link.href"
-              class="text-sm font-medium transition-colors"
+              class="text-xs md:text-sm font-medium transition-colors shrink-0"
               :class="getLinkClasses(link.href, link.external)"
           >
             {{ link.label }}
@@ -160,7 +161,7 @@ onUnmounted(() => {
         </template>
       </div>
 
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 md:gap-4 shrink-0 pl-2">
         <button
             @click="isSearchOpen = true"
             class="hidden md:flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 text-sm text-slate-300 hover:text-white hover:border-white/30 hover:bg-white/15 transition-all w-64 group shadow-lg"
@@ -180,8 +181,9 @@ onUnmounted(() => {
         >
           <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="18"
+              height="18"
+              class="md:w-5 md:h-5"
               viewBox="0 0 496 512"
               fill="currentColor"
           >
@@ -193,3 +195,14 @@ onUnmounted(() => {
     </div>
   </nav>
 </template>
+
+<style scoped>
+/* Oculta a scrollbar nativa caso o menu de links no celular precise rolar horizontalmente */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>
