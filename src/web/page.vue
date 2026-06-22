@@ -97,6 +97,20 @@ const featuresList = [
     border: "hover:border-red-500/30"
   },
 ];
+
+
+
+// Estado simples para controlar o feedback visual do botão de copiar
+const copied = ref(false)
+
+const copyCommand = (text: string) => {
+  navigator.clipboard.writeText(text).then(() => {
+    copied.value = true
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  })
+}
 </script>
 <script lang="ts">
 import {Metadata} from "nytlex/vue";
@@ -108,58 +122,68 @@ export function generateMetadata(): Metadata {
 }
 </script>
 <template>
-  <div class="min-h-screen bg-black text-slate-300 selection:bg-[#2b2b2a]/30 font-sans selection:text-white relative custom-scrollbar">
+  <div class="min-h-screen bg-black text-slate-300 selection:bg-blue-500/30 font-sans selection:text-white relative custom-scrollbar">
 
-    <section class="relative z-10 pt-20 pb-16 md:pt-24 md:pb-20 px-6 text-left overflow-hidden border-b border-white/10">
+    <section class="relative z-10 pt-24 pb-24 md:pt-24 md:pb-20 px-6 text-center overflow-hidden border-b border-white/10">
       <div class="grid-background"> </div>
       <div class="grid-corner-circle circle-top-left"> </div>
       <div class="grid-corner-circle circle-bottom-right" > </div>
 
-      <div class="relative z-10 max-w-5xl mx-auto">
+      <div class="relative z-10 w-full max-w-full mx-auto px-4">
         <div
             class="nytlex-reveal nytlex-reveal-fade inline-block px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[10px] font-bold uppercase tracking-[0.2em] mb-8 shadow-lg"
             :style="{ '--d': '0ms' }"
         >
-          Framework v{{ version }} {{ version.includes("canary") ? "" : 'Stable' }}
+          v{{ version }} {{ version.includes("canary") ? "" : 'Stable' }}
         </div>
 
         <h1
             ref="heroTitle"
-            class="nytlex-reveal nytlex-reveal-up nytlex-stagger text-5xl sm:text-6xl md:text-[100px] font-black text-white tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl"
+            class="nytlex-reveal nytlex-reveal-up nytlex-stagger text-5xl sm:text-6xl md:text-[75px] lg:text-[85px] font-bold text-white tracking-tight leading-[1.05] mb-8 max-w-6xl mx-auto"
             :style="{ '--d': '90ms' }"
         >
-          THE FRAMEWORK <br/>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-400 drop-shadow-lg">FOR WEB.</span>
+          The framework
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-400">for the web.</span>
         </h1>
 
         <p
             ref="heroSubtitle"
-            class="nytlex-reveal nytlex-reveal-up nytlex-stagger max-w-2xl text-base sm:text-lg md:text-xl text-slate-300 leading-relaxed mb-12 font-medium drop-shadow-md"
+            class="nytlex-reveal nytlex-reveal-up nytlex-stagger max-w-4xl mx-auto text-base sm:text-lg md:text-xl text-slate-300 leading-relaxed mb-12 font-medium"
             :style="{ '--d': '160ms' }"
         >
-          Nytlex.js is a high-performance full-stack primitive. It combines Node.js orchestration with a <strong class="text-white">Go-powered HTTP/3 core</strong> for unmatched speed and raw power.
+          Nytlex.js is a high-performance full-stack primitive combining Node.js orchestration with a Go performance layer for optimization. Built for speed and native React, Vue, or Svelte integration.
         </p>
 
         <div
             ref="heroButtons"
-            class="nytlex-reveal nytlex-reveal-up nytlex-stagger flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-5"
+            class="nytlex-reveal nytlex-reveal-up nytlex-stagger flex flex-col items-center gap-6"
             :style="{ '--d': '230ms' }"
         >
-          <div :class="`p-[2px] rounded-2xl bg-gradient-to-br from-white/30 via-white/20 to-white/10 hover:from-white/40 hover:to-white/20 transition-all duration-500 nytlex-tilt nytlex-sheen`">
-            <div ref="heroCmd" class="nytlex-reveal nytlex-reveal-fade nytlex-stagger relative max-w-md w-full" :style="{ '--d': '230ms' }">
+          <div class="p-[2px] rounded-2xl bg-gradient-to-br from-white/30 via-white/20 to-white/10 hover:from-white/40 hover:to-white/20 transition-all duration-500 nytlex-tilt nytlex-sheen w-full max-w-xs">
+            <div ref="heroCmd" class="nytlex-reveal nytlex-reveal-fade nytlex-stagger relative w-full" :style="{ '--d': '230ms' }">
               <div class="absolute inset-0 bg-white/30 blur-3xl rounded-full" />
-              <Link href="/docs" class="text-black relative flex items-center justify-center sm:justify-between gap-4 px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-[14px] text-[16px] sm:text-[18px] font-bold shadow-2xl hover:from-white hover:to-gray-100 transition-all">
+              <Link href="/docs" class="text-black relative flex items-center justify-center gap-4 px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-[14px] text-[16px] sm:text-[18px] font-bold shadow-2xl hover:from-white hover:to-gray-100 transition-all">
                 Get started
               </Link>
             </div>
           </div>
 
-          <div :class="`p-[2px] rounded-2xl bg-gradient-to-br from-white/20 to-white/5 hover:from-white/30 hover:to-[${primaryColor}]/30 transition-all duration-500 nytlex-tilt nytlex-sheen`">
-            <div ref="heroCmd" class="nytlex-reveal nytlex-reveal-fade nytlex-stagger relative max-w-md w-full" :style="{ '--d': '230ms' }">
+          <div :class="`p-[2px] rounded-2xl bg-gradient-to-br from-white/20 to-white/5 hover:from-white/30 hover:to-[${primaryColor}]/30 transition-all duration-500 nytlex-tilt nytlex-sheen w-full max-w-md`">
+            <div ref="heroCmd" class="nytlex-reveal nytlex-reveal-fade nytlex-stagger relative w-full" :style="{ '--d': '230ms' }">
               <div :class="`absolute inset-0 bg-[${primaryColor}]/30 blur-3xl rounded-full`" />
               <div class="relative flex items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4 bg-black/60 backdrop-blur-xl border border-white/20 rounded-[14px] text-xs sm:text-sm font-mono shadow-2xl">
                 <span :style="{ color: primaryColor }">$</span>
-                <span class="text-slate-200 flex-1 text-left font-medium overflow-hidden text-ellipsis whitespace-nowrap">npx @nytlex/create@latest</span>
+                <span class="text-slate-200 flex-1 text-left font-medium overflow-hidden text-ellipsis whitespace-nowrap">npm create nytlex@latest</span>
+
+                <button
+                    @click="copyCommand('npm create nytlex@latest ')"
+                    class="text-slate-500 hover:text-white p-1 rounded transition-colors duration-150 focus:outline-none mr-1"
+                    title="Copy command"
+                >
+                  <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><polyline points="20 6 9 17 4 12"/></svg>
+                </button>
+
                 <Terminal :size="16" class="text-slate-500 shrink-0" />
               </div>
             </div>
@@ -173,7 +197,7 @@ export function generateMetadata(): Metadata {
         <div
             class="absolute inset-0 opacity-0"
             :style="{
-            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)',
             backgroundSize: '30px 30px',
             maskImage: `radial-gradient(ellipse 100% 80% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.2) 85%, transparent 100%)`,
             WebkitMaskImage: `radial-gradient(ellipse 100% 80% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.2) 85%, transparent 100%)`,
@@ -251,10 +275,12 @@ export function generateMetadata(): Metadata {
             <div class="relative h-full bg-[#0a0a0c]/90 backdrop-blur-xl rounded-[14px] p-6 md:p-8 overflow-hidden border border-white/10 flex flex-col">
               <div class="flex items-start gap-5 mb-8 relative z-10">
                 <div class="shrink-0 p-3 bg-red-500/20 rounded-xl border border-red-500/30 shadow-lg shadow-red-500/10 text-red-400">
-                  <svg viewBox="0 0 100 100" class="w-full h-full" width="28" height="28" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.5 48.3344C12.5 28.5442 28.5442 12.5 48.3344 12.5C53.7919 12.5 59.0839 13.7225 63.958 15.986L57.5457 28.0935C54.7674 27.0264 51.6508 26.3889 48.3344 26.3889C36.2201 26.3889 26.3889 36.2201 26.3889 48.3344C26.3889 60.4488 36.2201 70.28 48.3344 70.28C53.7919 70.28 59.0839 69.0575 63.958 66.794L70.3703 78.9015C63.9877 82.5273 56.4022 84.1689 48.3344 84.1689C28.5442 84.1689 12.5 68.1247 12.5 48.3344Z" />
-                    <path d="M87.5 51.6656C87.5 71.4558 71.4558 87.5 51.6656 87.5C46.2081 87.5 40.9161 86.2775 36.042 84.014L42.4543 71.9065C45.2326 72.9736 48.3492 73.6111 51.6656 73.6111C63.7799 73.6111 73.6111 63.7799 73.6111 51.6656C73.6111 39.5512 63.7799 29.72 51.6656 29.72C46.2081 29.72 40.9161 30.9425 36.042 33.206L29.6297 21.0985C36.0123 17.4727 43.5978 15.8311 51.6656 15.8311C71.4558 15.8311 87.5 31.8753 87.5 51.6656Z" />
-                  </svg>
+
+                  <svg class="w-full h-full" width="28" height="28" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 98.1 118" style="enable-background:new 0 0 98.1 118;" xml:space="preserve">
+<path style="fill:#FF3E00;" d="M91.8,15.6C80.9-0.1,59.2-4.7,43.6,5.2L16.1,22.8C8.6,27.5,3.4,35.2,1.9,43.9c-1.3,7.3-0.2,14.8,3.3,21.3  c-2.4,3.6-4,7.6-4.7,11.8c-1.6,8.9,0.5,18.1,5.7,25.4c11,15.7,32.6,20.3,48.2,10.4l27.5-17.5c7.5-4.7,12.7-12.4,14.2-21.1  c1.3-7.3,0.2-14.8-3.3-21.3c2.4-3.6,4-7.6,4.7-11.8C99.2,32.1,97.1,22.9,91.8,15.6"/>
+                    <path style="fill:#FFFFFF;" d="M40.9,103.9c-8.9,2.3-18.2-1.2-23.4-8.7c-3.2-4.4-4.4-9.9-3.5-15.3c0.2-0.9,0.4-1.7,0.6-2.6l0.5-1.6l1.4,1  c3.3,2.4,6.9,4.2,10.8,5.4l1,0.3l-0.1,1c-0.1,1.4,0.3,2.9,1.1,4.1c1.6,2.3,4.4,3.4,7.1,2.7c0.6-0.2,1.2-0.4,1.7-0.7L65.5,72  c1.4-0.9,2.3-2.2,2.6-3.8c0.3-1.6-0.1-3.3-1-4.6c-1.6-2.3-4.4-3.3-7.1-2.6c-0.6,0.2-1.2,0.4-1.7,0.7l-10.5,6.7  c-1.7,1.1-3.6,1.9-5.6,2.4c-8.9,2.3-18.2-1.2-23.4-8.7c-3.1-4.4-4.4-9.9-3.4-15.3c0.9-5.2,4.1-9.9,8.6-12.7l27.5-17.5  c1.7-1.1,3.6-1.9,5.6-2.5c8.9-2.3,18.2,1.2,23.4,8.7c3.2,4.4,4.4,9.9,3.5,15.3c-0.2,0.9-0.4,1.7-0.7,2.6l-0.5,1.6l-1.4-1  c-3.3-2.4-6.9-4.2-10.8-5.4l-1-0.3l0.1-1c0.1-1.4-0.3-2.9-1.1-4.1c-1.6-2.3-4.4-3.3-7.1-2.6c-0.6,0.2-1.2,0.4-1.7,0.7L32.4,46.1  c-1.4,0.9-2.3,2.2-2.6,3.8s0.1,3.3,1,4.6c1.6,2.3,4.4,3.3,7.1,2.6c0.6-0.2,1.2-0.4,1.7-0.7l10.5-6.7c1.7-1.1,3.6-1.9,5.6-2.5  c8.9-2.3,18.2,1.2,23.4,8.7c3.2,4.4,4.4,9.9,3.5,15.3c-0.9,5.2-4.1,9.9-8.6,12.7l-27.5,17.5C44.8,102.5,42.9,103.3,40.9,103.9"/>
+</svg>
+
                 </div>
                 <div class="flex-1">
                   <div class="flex justify-between items-center mb-1">
@@ -506,154 +532,158 @@ export function generateMetadata(): Metadata {
         </div>
       </section>
 
-      <section class="relative z-10 max-w-6xl mx-auto px-6 py-16 md:py-24">
+      <section class="relative z-10 max-w-7xl mx-auto px-6 py-16 md:py-24 ">
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 md:gap-16 items-center">
 
           <div class="lg:col-span-2 nytlex-reveal nytlex-reveal-left">
-            <h2 class="text-3xl sm:text-4xl font-black text-white mb-6 leading-tight drop-shadow-lg">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6 leading-[1.1] tracking-tight">
               Built for <br/>
-              <span class="bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Modern Devs.</span>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400">Modern Devs.</span>
             </h2>
-            <p class="text-base sm:text-lg text-slate-300 mb-8 leading-relaxed">
+            <p class="text-base sm:text-lg text-neutral-400 mb-10 leading-relaxed font-normal">
               Built for developers who value speed, control, and clarity, from the first command to production.
             </p>
+
             <div class="space-y-6">
               <div class="flex gap-4 group">
-                <div class="shrink-0 w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-emerald-400 shadow-lg group-hover:shadow-emerald-400/20 transition-all">
+                <div class="shrink-0 w-12 h-12 rounded-xl bg-white/[0.03] backdrop-blur-md border border-white/10 flex items-center justify-center text-emerald-400 shadow-inner group-hover:border-emerald-500/30 transition-all duration-300">
                   <Terminal :size="20" />
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">Interactive CLI</h4>
-                  <p class="text-sm text-slate-400">A guided setup experience with intelligent defaults.</p>
+                  <h4 class="text-white font-semibold text-base mb-1">Interactive CLI</h4>
+                  <p class="text-sm text-neutral-400 leading-relaxed">A guided setup experience with intelligent defaults.</p>
                 </div>
               </div>
               <div class="flex gap-4 group">
-                <div class="shrink-0 w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-cyan-400 shadow-lg group-hover:shadow-cyan-400/20 transition-all">
+                <div class="shrink-0 w-12 h-12 rounded-xl bg-white/[0.03] backdrop-blur-md border border-white/10 flex items-center justify-center text-cyan-400 shadow-inner group-hover:border-cyan-500/30 transition-all duration-300">
                   <Cpu :size="20" />
                 </div>
                 <div>
-                  <h4 class="text-white font-bold text-lg">Native Environment</h4>
-                  <p class="text-sm text-slate-400">Cross-platform by default. Automatically detects your Node.js version.</p>
+                  <h4 class="text-white font-semibold text-base mb-1">Native Environment</h4>
+                  <p class="text-sm text-neutral-400 leading-relaxed">Cross-platform by default. Automatically detects your Node.js version.</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="lg:col-span-3 nytlex-reveal nytlex-reveal-right relative p-[2px] rounded-2xl bg-gradient-to-br from-white/30 via-white/15 to-transparent shadow-3xl">
-            <div class="bg-[#0a0a0c]/95 backdrop-blur-2xl rounded-[14px] overflow-hidden border border-white/20 font-mono text-[13px] leading-relaxed shadow-2xl">
+          <div class="lg:col-span-3 nytlex-reveal nytlex-reveal-right relative p-[4px] rounded-2xl bg-gradient-to-b from-white/10 to-transparent">
+            <div class="bg-[#09090b] backdrop-blur-2xl rounded-[15px] overflow-hidden   font-mono text-[13px] leading-relaxed shadow-2xl">
 
-              <div class="bg-gradient-to-r from-[#1a1a1c] to-[#161618] px-4 py-3 flex items-center justify-between border-b border-white/10">
+              <div class="bg-neutral-900/40 px-4 py-3 flex items-center justify-between border-b border-white/5">
                 <div class="flex gap-2">
-                  <div class="w-3 h-3 rounded-full bg-red-500/80 shadow-sm" />
-                  <div class="w-3 h-3 rounded-full bg-yellow-500/80 shadow-sm" />
-                  <div class="w-3 h-3 rounded-full bg-green-500/80 shadow-sm" />
+                  <div class="w-3 h-3 rounded-full bg-neutral-800 border border-white/5" />
+                  <div class="w-3 h-3 rounded-full bg-neutral-800 border border-white/5" />
+                  <div class="w-3 h-3 rounded-full bg-neutral-800 border border-white/5" />
                 </div>
-                <span class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Nytlex CLI Session</span>
+                <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-medium">Nytlex CLI Session</span>
               </div>
 
-              <div class="p-4 md:p-6 overflow-x-auto custom-scrollbar max-h-[450px] bg-black/40 backdrop-blur-sm">
+              <div class="p-5 md:p-7 overflow-x-auto custom-scrollbar max-h-[450px] bg-black/20">
                 <div class="min-w-max">
-                  <div class="flex gap-3 mb-4">
-                    <span class="text-slate-500">PS D:\Nytlex&gt;</span>
-                    <span class="text-white font-medium">npx @nytlex/create@latest my-app</span>
+                  <div class="flex gap-3 mb-5">
+                    <span class="text-neutral-500">PS D:\Nytlex&gt;</span>
+                    <span class="text-neutral-100 font-medium">npm create nytlex@latest my-app</span>
                   </div>
 
-                  <div class="space-y-1 mb-6">
+                  <div class="space-y-1.5 mb-6">
                     <div class="flex gap-2">
                       <span class="text-cyan-400">?</span>
-                      <span class="text-white">What framework do you want to use?</span>
-                      <span class="text-slate-500">(React/Vue/Svelte)</span>
-                      <span class="text-slate-300">(svelte)</span>
+                      <span class="text-neutral-200">What framework do you want to use?</span>
+                      <span class="text-neutral-500">(React/Vue/Svelte)</span>
+                      <span class="text-neutral-400">(svelte)</span>
                     </div>
                     <div class="flex gap-2">
                       <span class="text-cyan-400 font-bold">?</span>
-                      <span class="text-white">Would you like to use recommended options?</span>
-                      <span class="text-slate-500">(Svelte)</span>
+                      <span class="text-neutral-200">Would you like to use recommended options?</span>
+                      <span class="text-neutral-500">(Svelte)</span>
                     </div>
-                    <div class="pl-4 text-cyan-400 underline underline-offset-4 decoration-2 font-medium">
+                    <div class="pl-4 text-cyan-400 font-medium">
                       ❯ Yes, use recommended defaults - TypeScript, Tailwind CSS, Module Alias
                     </div>
-                    <div class="pl-4 text-slate-600">Maybe, use Path Router defaults</div>
+                    <div class="pl-4 text-neutral-600">Maybe, use Path Router defaults</div>
                   </div>
 
-                  <div class="space-y-0.5 mb-6">
+                  <div class="space-y-1 mb-6">
                     <div v-for="(msg, i) in ['Created project directory and package.json', 'Created project structure', 'TypeScript configuration initialized.', 'Tailwind CSS setup complete.']" :key="i" class="flex gap-3 items-center">
-                      <span class="text-slate-600 text-[11px]">13:12:54</span>
-                      <span class="text-emerald-400 font-bold">✔ SUCCESS</span>
-                      <span class="text-slate-200">{{ msg }}</span>
+                      <span class="text-neutral-600 text-[11px]">13:12:54</span>
+                      <span class="text-emerald-400 font-semibold text-[12px]">✔ SUCCESS</span>
+                      <span class="text-neutral-300">{{ msg }}</span>
                     </div>
                     <div class="flex gap-3 items-center mt-2">
-                      <span class="text-slate-600 text-[11px]">13:12:54</span>
-                      <span class="text-cyan-400 animate-spin">○</span>
-                      <span class="text-slate-200 font-bold">Installing dependencies...</span>
+                      <span class="text-neutral-600 text-[11px]">13:12:54</span>
+                      <span class="text-cyan-400 animate-pulse">○</span>
+                      <span class="text-neutral-300 font-semibold">Installing dependencies...</span>
                     </div>
                   </div>
 
-                  <div class="pt-4 border-t border-white/10 space-y-4">
+                  <div class="pt-5 border-t border-white/5 space-y-4">
                     <div class="flex gap-3 items-center">
-                      <span class="text-slate-600 text-[11px]">13:12:59</span>
-                      <span class="text-cyan-400 font-bold">nytlex.js</span>
-                      <span class="text-slate-400">v{{ version }}</span>
+                      <span class="text-neutral-600 text-[11px]">13:12:59</span>
+                      <span class="text-cyan-400 font-medium">nytlex.js</span>
+                      <span class="text-neutral-400">v{{ version }}</span>
                     </div>
 
                     <div class="flex gap-3 items-center">
-                      <span class="text-slate-600 text-[11px]">13:12:59</span>
+                      <span class="text-neutral-600 text-[11px]">13:12:59</span>
                       <span class="text-emerald-400">✔</span>
-                      <span class="text-white font-bold">Project my-app created successfully.</span>
+                      <span class="text-neutral-100 font-semibold">Project my-app created successfully.</span>
                     </div>
 
                     <div class="grid grid-cols-1 gap-1 pl-10">
-                      <div class="text-slate-400 font-bold mb-1">Environment:</div>
-                      <div class="text-slate-300 flex gap-2">
-                        <span class="text-slate-600">•</span> Runtime: <span class="text-emerald-400 font-medium">Node.js v25.4.0</span>
+                      <div class="text-neutral-400 font-medium mb-1">Environment:</div>
+                      <div class="text-neutral-300 flex gap-2">
+                        <span class="text-neutral-700">•</span> Runtime: <span class="text-emerald-400 font-medium">Node.js v25.4.0</span>
                       </div>
-                      <div class="text-slate-300 flex gap-2">
-                        <span class="text-slate-600">•</span> Framework: <span class="text-cyan-400 font-medium">Nytlex.js v{{ version }}</span>
+                      <div class="text-neutral-300 flex gap-2">
+                        <span class="text-neutral-700">•</span> Framework: <span class="text-cyan-400 font-medium">Nytlex.js v{{ version }}</span>
                       </div>
                     </div>
 
                     <div class="pl-10">
-                      <div class="text-slate-400 font-bold mb-1">Next steps:</div>
+                      <div class="text-neutral-400 font-medium mb-1">Next steps:</div>
                       <div class="text-cyan-400 font-medium">1. cd my-app</div>
                       <div class="text-cyan-400 font-medium">2. npm run dev</div>
                     </div>
 
-                    <div class="text-[11px] text-slate-600 pt-2 italic">
-                      Website: <span class="underline">https://nytlex.mfraz.ovh</span>
+                    <div class="text-[11px] text-neutral-600 pt-2 italic">
+                      Website: <span class="underline decoration-neutral-700">https://nytlex.mfraz.ovh</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
-      <section class="relative z-10 max-w-4xl mx-auto px-6 py-16 md:py-32 text-center">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_70%)] pointer-events-none" />
+      <section class="relative z-10 w-full max-w-full mx-auto px-6 py-16 md:py-32 text-center overflow-hidden border-b border-white/5 ">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.04)_0%,transparent_65%)] pointer-events-none" />
 
-        <div class="nytlex-reveal nytlex-reveal-up relative">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-slate-300 mb-6">
-            <Github :size="14" />
+        <div class="nytlex-reveal nytlex-reveal-up relative z-10 max-w-6xl mx-auto px-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10 text-xs font-medium text-neutral-300 mb-8 shadow-inner">
+            <Github :size="14" class="opacity-80" />
             <span>Open Source</span>
           </div>
 
-          <div class="mb-8">
-            <h2 class="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-6 tracking-tight">
-              Ready to build the future?
+          <div class="mb-10">
+            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tighter leading-[1.05] drop-shadow-2xl max-w-4xl mx-auto">
+              Ready to build <br class="hidden sm:inline" />
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-400 drop-shadow-lg">the future?</span>
             </h2>
-            <p class="text-lg sm:text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
+            <p class="text-lg sm:text-xl text-slate-300 mb-10 max-w-3xl mx-auto font-medium">
               Join the ecosystem of developers building faster, lighter, and more scalable web applications.
             </p>
           </div>
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/docs" class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-white text-black font-bold rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] transition-all flex items-center justify-center gap-2">
-              <Search />
-              Read the Documentation
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+            <Link href="/docs" class="w-full px-6 py-3.5 bg-white text-black font-bold rounded-xl shadow-2xl hover:bg-neutral-100 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 text-sm">
+              <Search :size="16" />
+              Documentation
             </Link>
 
-            <a href="https://github.com/murillo-frazao-cunha/nytlex.js" target="_blank" rel="noreferrer" class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-[#111111] border border-white/10 text-white font-bold rounded-xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
-              <Github :size="18" />
+            <a href="https://github.com/murillo-frazao-cunha/nytlex.js" target="_blank" rel="noreferrer" class="w-full px-6 py-3.5 bg-black/40 backdrop-blur-xl border border-white/10 text-white font-bold rounded-xl hover:bg-white/[0.05] hover:border-white/20 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 text-sm">
+              <Github :size="16" />
               Star on GitHub
             </a>
           </div>

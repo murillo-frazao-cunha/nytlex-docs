@@ -34,7 +34,7 @@ The fastest way to start a new Nytlex.js project is by using the official basic 
 > - Start the development server locally
 
 ```bash
-npx @nytlex/create@latest my-project
+npm create nytlex@latest my-project
 cd my-project
 npm run dev
 ```

@@ -63,24 +63,28 @@ body {
 .code-block {
     @apply bg-white/[0.04] backdrop-blur-2xl ring-1 ring-white/[0.08] shadow-2xl overflow-hidden rounded-2xl;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
 .code-header {
     @apply select-none bg-gradient-to-r from-white/5 to-transparent;
 }
 
-/* Prism Theme Overrides - CORES VIVAS (Tech Stack) */
-.token.comment { color: #64748b; } /* Slate mais suave */
-.token.string { color: #42b883; } /* Vue Green */
-.token.keyword { color: #61dafb; font-style: italic; } /* React Cyan */
-.token.function { color: #fbbf24; font-weight: 500; } /* JS Yellow/Amber */
-.token.operator { color: #94a3b8; }
-.token.number { color: #a78bfa; } /* Soft Purple (comum em temas dark) */
-.token.punctuation { color: #94a3b8; }
+.shiki-wrapper pre.shiki {
+    background-color: transparent !important;
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: grid;
+
+    white-space: pre-wrap;      /* permite quebrar linha */
+    overflow-wrap: anywhere;    /* quebra palavras grandes */
+    word-break: break-word;     /* fallback */
+}
 
 /* Inline Code - Estilo TypeScript Blue/React Cyan */
-.markdown-content code:not([class*="language-"]) {
+.markdown-content code:not([class*="language-"]):not(.shiki code) {
     @apply bg-[#0ea5e9]/10 text-[#0ea5e9] px-1.5 py-0.5 rounded-md text-[0.9em] font-mono ring-1 ring-[#0ea5e9]/20;
 }
 
@@ -207,10 +211,8 @@ body {
 .nytlex-tilt:hover {
     transform: perspective(900px) rotateX(6deg) rotateY(-8deg) translateY(-4px);
     box-shadow: 0 25px 90px -35px rgba(255, 255, 255, 0.2),
-                0 15px 60px -15px rgba(255, 255, 255, 0.15);
+    0 15px 60px -15px rgba(255, 255, 255, 0.15);
 }
-
-/* O restante das animações permanece igual para manter a fluidez */
 
 .nytlex-sheen {
     position: relative;
@@ -282,7 +284,7 @@ body {
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
 .glass-card-hover {
@@ -293,19 +295,19 @@ body {
     background: rgba(255, 255, 255, 0.06);
     border-color: rgba(255, 255, 255, 0.15);
     box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.5),
-                0 0 60px 0 rgba(255, 255, 255, 0.08),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    0 0 60px 0 rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Glow Effects */
 .glow-white {
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.15),
-                0 0 60px rgba(255, 255, 255, 0.08);
+    0 0 60px rgba(255, 255, 255, 0.08);
 }
 
 .glow-white-strong {
     box-shadow: 0 0 40px rgba(255, 255, 255, 0.25),
-                0 0 80px rgba(255, 255, 255, 0.15);
+    0 0 80px rgba(255, 255, 255, 0.15);
 }
 
 /* Animated Gradient Background */
@@ -339,4 +341,3 @@ body {
         transform: translateY(0);
     }
 }
-

@@ -2,13 +2,14 @@
 import "./style.css"
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { marked } from 'marked';
+import { createHighlighter } from 'shiki';
 
 // Ícones Lucide
 import {
   Zap, Book, BookOpen, Package, ChevronLeft, ChevronRight, ChevronDown,
   Download, FileText, Settings, GitCompare, Github, Globe, Palette,
   Shield, Wrench, Code, Lock, Box, Workflow, Home, Search, Cog,
-  Menu, X // Ícones adicionados para o menu mobile
+  Menu, X
 } from 'lucide-vue-next';
 import { Link } from "nytlex/vue";
 
@@ -17,7 +18,6 @@ import { sidebarConfig } from "@/web/lib/searchIndex";
 import Navbar from "../../../../components/Navbar.vue";
 import Footer from "../../../../components/Footer.vue";
 
-// Props devem vir DEPOIS dos imports
 const props = defineProps({
   params: {
     type: Object,
@@ -40,53 +40,73 @@ const availableFrameworks = [
   {
     id: 'svelte',
     label: 'Svelte',
-    iconHtml: '<svg viewBox="0 0 32 32" class="text-orange-500 w-full h-full" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M29.42 9.94c-1.39-1.58-3.41-2.46-5.55-2.42c-1.55.03-3.04.57-4.22 1.53l-3.34 2.71c-.44.36-.85.75-1.22 1.17c-.72.83-1.13 1.87-1.14 2.94c-.02 1.25.47 2.44 1.35 3.31a4.29 4.29 0 0 0 3.03 1.21c1.48 0 2.87-.58 3.93-1.64l.42-.42c.32-.32.32-.85 0-1.17c-.32-.32-.84-.32-1.16 0l-.42.42c-.74.74-1.72 1.15-2.78 1.15c-1.03 0-1.99-.39-2.72-1.1c-.65-.63-1.01-1.47-.95-2.22c.01-.74.31-1.44.84-1.99c.28-.29.58-.55.91-.79l3.32-2.69c.88-.72 1.99-1.12 3.13-1.14c1.56-.03 3.03.62 4.05 1.77c.93 1.05 1.41 2.4 1.35 3.82a5.53 5.53 0 0 1-1.56 3.52l-5.69 5.73c-1.9 1.91-4.43 2.97-7.1 2.98c-2.5.01-4.88-.93-6.69-2.66c-1.74-1.66-2.73-3.88-2.8-6.26c-.07-2.43.82-4.76 2.5-6.53l2.91-3.1a.85.85 0 0 1 1.21.01c.33.32.34.85.02 1.18l-2.9 3.08c-1.22 1.29-1.87 2.98-1.82 4.76c.05 1.73.77 3.35 2.04 4.56c1.32 1.26 3.06 1.95 4.88 1.94c1.95-.01 3.79-.78 5.17-2.17l5.7-5.75c1.17-1.18 1.84-2.78 1.88-4.45c.04-1.85-.38-3.63-1.22-5.16zM8.35 23.36c1.4 1.58 3.41 2.46 5.55 2.42c1.55-.03 3.04-.57 4.22-1.53l3.34-2.71c.44-.36.85-.75 1.22-1.17c.72-.83 1.13-1.87 1.14-2.94c.02-1.25-.47-2.44-1.35-3.31a4.29 4.29 0 0 0-3.03-1.21c-1.48 0-2.87.58-3.93 1.64l-.42.42c-.32.32-.32.85 0 1.17c.32.32.84.32 1.16 0l.42-.42c.74-.74 1.72-1.15 2.78-1.15c1.03 0 1.99.39 2.72 1.1c.65.63 1.01 1.47.95 2.22c-.01.74-.31 1.44-.84 1.99c-.28.29-.58.55-.91.79l-3.32 2.69c-.88.72-1.99 1.12-3.13 1.14c-1.56-.03-3.03-.62-4.05-1.77c-.93-1.05-1.41-2.4-1.35-3.82a5.53 5.53 0 0 1 1.56-3.52l5.69-5.73c1.9-1.91 4.43-2.97 7.1-2.98c2.5-.01 4.88.93 6.69 2.66c1.74 1.66 2.73 3.88 2.8 6.26c.07 2.43-.82 4.76-2.5 6.53l-2.91 3.1a.85.85 0 0 1-1.21-.01c-.33-.32-.34-.85-.02-1.18l2.9-3.08c1.22-1.29 1.87 2.98 1.82-4.76c-.05-1.73-.77-3.35-2.04-4.56c-1.32-1.26-3.06-1.95-4.88-1.94c-1.95.01-3.79-.78-5.17 2.17l-5.7 5.75c-1.17 1.18-1.84-2.78-1.88-4.45c-.04 1.85.38 3.63 1.22 5.16z"/></svg>'
+    iconHtml: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 98.1 118" style="enable-background:new 0 0 98.1 118;" xml:space="preserve">\n' +
+        '<style type="text/css">\n' +
+        '\t.st0{fill:#FF3E00;}\n' +
+        '\t.st1{fill:#FFFFFF;}\n' +
+        '</style>\n' +
+        '<path class="st0" d="M91.8,15.6C80.9-0.1,59.2-4.7,43.6,5.2L16.1,22.8C8.6,27.5,3.4,35.2,1.9,43.9c-1.3,7.3-0.2,14.8,3.3,21.3  c-2.4,3.6-4,7.6-4.7,11.8c-1.6,8.9,0.5,18.1,5.7,25.4c11,15.7,32.6,20.3,48.2,10.4l27.5-17.5c7.5-4.7,12.7-12.4,14.2-21.1  c1.3-7.3,0.2-14.8-3.3-21.3c2.4-3.6,4-7.6,4.7-11.8C99.2,32.1,97.1,22.9,91.8,15.6"/>\n' +
+        '<path class="st1" d="M40.9,103.9c-8.9,2.3-18.2-1.2-23.4-8.7c-3.2-4.4-4.4-9.9-3.5-15.3c0.2-0.9,0.4-1.7,0.6-2.6l0.5-1.6l1.4,1  c3.3,2.4,6.9,4.2,10.8,5.4l1,0.3l-0.1,1c-0.1,1.4,0.3,2.9,1.1,4.1c1.6,2.3,4.4,3.4,7.1,2.7c0.6-0.2,1.2-0.4,1.7-0.7L65.5,72  c1.4-0.9,2.3-2.2,2.6-3.8c0.3-1.6-0.1-3.3-1-4.6c-1.6-2.3-4.4-3.3-7.1-2.6c-0.6,0.2-1.2,0.4-1.7,0.7l-10.5,6.7  c-1.7,1.1-3.6,1.9-5.6,2.4c-8.9,2.3-18.2-1.2-23.4-8.7c-3.1-4.4-4.4-9.9-3.4-15.3c0.9-5.2,4.1-9.9,8.6-12.7l27.5-17.5  c1.7-1.1,3.6-1.9,5.6-2.5c8.9-2.3,18.2,1.2,23.4,8.7c3.2,4.4,4.4,9.9,3.5,15.3c-0.2,0.9-0.4,1.7-0.7,2.6l-0.5,1.6l-1.4-1  c-3.3-2.4-6.9-4.2-10.8-5.4l-1-0.3l0.1-1c0.1-1.4-0.3-2.9-1.1-4.1c-1.6-2.3-4.4-3.3-7.1-2.6c-0.6,0.2-1.2,0.4-1.7,0.7L32.4,46.1  c-1.4,0.9-2.3,2.2-2.6,3.8s0.1,3.3,1,4.6c1.6,2.3,4.4,3.3,7.1,2.6c0.6-0.2,1.2-0.4,1.7-0.7l10.5-6.7c1.7-1.1,3.6-1.9,5.6-2.5  c8.9-2.3,18.2,1.2,23.4,8.7c3.2,4.4,4.4,9.9,3.5,15.3c-0.9,5.2-4.1,9.9-8.6,12.7l-27.5,17.5C44.8,102.5,42.9,103.3,40.9,103.9"/>\n' +
+        '</svg>'
   }
 ];
 
 const getFrameworkData = (id: string) => availableFrameworks.find(f => f.id === id) || availableFrameworks[0];
 
-// --- Configurações do Markdown e Prism ---
+// --- Configurações do Markdown e Shiki ---
 const primaryColor = "#a8a8a8";
-const generateId = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const generateId = (text: string) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-let prismInstance: any = null;
+let highlighter: any = null;
 const renderer = new marked.Renderer();
 
-renderer.heading = ({ text, depth }: any) => {
-  const id = generateId(text);
-  return `<h${depth} id="${id}" class="group flex items-center gap-2">
-            ${text}
+// Blidagem de Compatibilidade do Marked (v11- / v12+)
+renderer.heading = (tokenOrText: any, depth?: any) => {
+  const textContent = typeof tokenOrText === 'string' ? tokenOrText : (tokenOrText?.text || '');
+  const level = typeof tokenOrText === 'string' ? depth : (tokenOrText?.depth || 1);
+  const id = generateId(textContent);
+
+  return `<h${level} id="${id}" class="group flex items-center gap-2">
+            ${textContent}
             <a href="#${id}" class="opacity-0 group-hover:opacity-100 transition-opacity" style="color: ${primaryColor}">#</a>
-          </h${depth}>`;
+          </h${level}>`;
 };
 
-renderer.code = ({ text, lang }: any) => {
-  let validLanguage = lang || 'plaintext';
+renderer.code = (tokenOrText: any, paramLang?: any) => {
+  const textContent = typeof tokenOrText === 'string' ? tokenOrText : (tokenOrText?.text || '');
+  let validLanguage = typeof tokenOrText === 'string' ? paramLang : (tokenOrText?.lang || 'text');
 
-  if (prismInstance && !prismInstance.languages[validLanguage]) {
-    validLanguage = 'plaintext';
+  if (!validLanguage) validLanguage = 'text';
+  if (validLanguage === 'vue' || validLanguage === 'svelte') {
+    validLanguage = 'html';
   }
 
-  let highlighted = text;
-  if (prismInstance && prismInstance.languages[validLanguage]) {
-    highlighted = prismInstance.highlight(text, prismInstance.languages[validLanguage], validLanguage);
+  let highlightedHTML = '';
+
+  if (highlighter && highlighter.getLoadedLanguages().includes(validLanguage)) {
+    highlightedHTML = highlighter.codeToHtml(textContent, {
+      lang: validLanguage,
+      theme: 'github-dark'
+    });
   } else {
-    highlighted = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+    const escapedText = String(textContent).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    highlightedHTML = `<pre><code>${escapedText}</code></pre>`;
   }
+
+  // Previne injeção acidental de aspas duplas/simples no atributo data-code
+  const safeCode = String(textContent).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
   return `
         <div class="font-jmono code-block my-8 group relative rounded-xl border border-white/5 bg-[#0a0a0c]">
             <div class="code-header flex justify-between items-center px-4 py-2 bg-white/[0.03] rounded-t-xl border-b border-white/5">
-                <span class="text-[10px] uppercase tracking-widest font-bold text-zinc-500">${lang || 'text'}</span>
-                <button class="copy-button p-1 text-zinc-600 hover:text-white transition-colors" onclick="navigator.clipboard.writeText(this.getAttribute('data-code'))" data-code="${text.replace(/"/g, '&quot;')}">
+                <span class="text-[10px] uppercase tracking-widest font-bold text-zinc-500">${validLanguage}</span>
+                <button class="copy-button p-1 text-zinc-600 hover:text-white transition-colors" onclick="navigator.clipboard.writeText(this.getAttribute('data-code'))" data-code="${safeCode}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 </button>
             </div>
-            <pre class="language-${validLanguage} !bg-transparent !m-0 !p-6 overflow-x-auto text-sm leading-relaxed"><code class="language-${validLanguage}">${highlighted}</code></pre>
+            <div class="shiki-wrapper overflow-x-auto text-sm leading-relaxed p-6">
+                ${highlightedHTML}
+            </div>
         </div>
     `;
 };
@@ -117,7 +137,6 @@ const iconMap: { [key: string]: any } = {
 // --- Component Logic ---
 
 const brand = computed(() => props.params.value || 'nytlex');
-// Verifica se o value2 bate com a id de algum dos frameworks da nossa lista
 const isFrameworkParam = computed(() => availableFrameworks.some(f => f.id === props.params.value2));
 
 const initialFramework = isFrameworkParam.value ? props.params.value2 : 'react';
@@ -131,7 +150,7 @@ const htmlContent = ref('');
 const headings = ref<any[]>([]);
 const isDropdownOpen = ref(false);
 const isPrismReady = ref(false);
-const isMobileMenuOpen = ref(false); // Estado do menu mobile
+const isMobileMenuOpen = ref(false);
 
 const getAllPages = () => {
   return sidebarConfig.sections.flatMap(section => section.items);
@@ -156,7 +175,6 @@ const getUrl = (itemId: string, newFramework?: string): string => {
   return newUrl
 };
 
-// Fecha o menu mobile automaticamente ao trocar de seção
 watch(activeSection, () => {
   isMobileMenuOpen.value = false;
 });
@@ -167,10 +185,9 @@ watch([activeSection, framework, isPrismReady], async () => {
       .find(i => i.id === activeSection.value);
 
   if (currentItem?.file) {
-    // Procura a versão do framework selecionado ou cai de volta pra react/string base
     const content = typeof currentItem.file === 'string'
         ? currentItem.file
-        : (currentItem.file[framework.value] || currentItem.file['react']);
+        : (currentItem.file[framework.value as keyof typeof currentItem.file] || currentItem.file['react']);
 
     htmlContent.value = marked.parse(content) as string;
 
@@ -178,10 +195,7 @@ watch([activeSection, framework, isPrismReady], async () => {
     const matches = [...content.matchAll(headingRegex)];
     headings.value = matches.map((m: any) => ({ id: generateId(m[2]), text: m[2], level: m[1].length }));
 
-    if (typeof window !== 'undefined' && prismInstance) {
-      await nextTick();
-      prismInstance.highlightAll();
-
+    if (typeof window !== 'undefined') {
       if(window.scrollTo) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -193,24 +207,10 @@ let handlePopState: () => void;
 
 onMounted(async () => {
   if (typeof window !== 'undefined') {
-    const PrismModule = await import('prismjs');
-    prismInstance = PrismModule.default || PrismModule;
-
-    await import('prismjs/components/prism-javascript');
-    await import('prismjs/components/prism-typescript');
-    await import('prismjs/components/prism-jsx');
-    await import('prismjs/components/prism-tsx');
-    await import('prismjs/components/prism-css');
-    await import('prismjs/components/prism-bash');
-    await import('prismjs/components/prism-json');
-    await import('prismjs/components/prism-markdown');
-    await import('prismjs/components/prism-markup');
-
-    // Mapeamento seguro para frameworks usarem HTML highlight de base
-    if (prismInstance.languages.markup) {
-      prismInstance.languages.vue = prismInstance.languages.markup;
-      prismInstance.languages.svelte = prismInstance.languages.markup;
-    }
+    highlighter = await createHighlighter({
+      themes: ['github-dark'],
+      langs: ['javascript', 'typescript', 'jsx', 'tsx', 'css', 'bash', 'json', 'markdown', 'html']
+    });
 
     isPrismReady.value = true;
 
@@ -317,7 +317,7 @@ onUnmounted(() => {
                     : 'hover:bg-white/[0.03] text-zinc-500 hover:text-zinc-200'
                 }`"
               >
-                <component :is="iconMap[item.icon] || FileText" :size="18" :class="activeSection === item.id ? 'text-white' : 'group-hover:text-zinc-300 transition-colors'" />
+                <component :is="iconMap[item.icon] || FileText" size="18" :class="activeSection === item.id ? 'text-white' : 'group-hover:text-zinc-300 transition-colors'" />
                 <span class="text-sm font-medium tracking-wide truncate">{{ item.label }}</span>
               </Link>
             </div>
@@ -403,17 +403,14 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-pre[class*="language-"] {
+.shiki-wrapper pre {
   background: transparent !important;
-  text-shadow: none !important;
-}
-
-.code-block pre {
+  margin: 0 !important;
+  padding: 0 !important;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
-/* Container fixo para prender o background na viewport e respeitar os limites do main */
 .fixed-bg-container {
   position: fixed;
   inset: 0;
@@ -421,7 +418,6 @@ pre[class*="language-"] {
   height: 100%;
 }
 
-/* CSS do Grid Background e Animações - Adicionado do component Landing */
 .grid-background {
   position: absolute;
   inset: 0;
@@ -467,7 +463,7 @@ pre[class*="language-"] {
     transform: scale(0.95);
   }
   to {
-    opacity: 0.3; /* <-- Diminua aqui (Ex: 0.2 ou 0.1 para ficar bem sutil) */
+    opacity: 0.3;
     transform: scale(1);
   }
 }
